@@ -11,12 +11,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import java.awt.Font;
 
 public class Login extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField tfLogin;
+	private JTextField tfPassword;
 
 	/**
 	 * Launch the application.
@@ -40,31 +41,34 @@ public class Login extends JFrame {
 	public Login() {
 		getContentPane().setLayout(null);
 		
-		JButton btnNewButton = new JButton("Connection");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton btnConnection = new JButton("Connection");
+		btnConnection.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 			}
 		});
-		btnNewButton.setBounds(250, 276, 89, 23);
-		getContentPane().add(btnNewButton);
+		btnConnection.setBounds(250, 276, 89, 23);
+		getContentPane().add(btnConnection);
 		
-		textField = new JTextField();
-		textField.setBounds(217, 115, 150, 36);
-		getContentPane().add(textField);
-		textField.setColumns(10);
+		tfLogin = new JTextField();
+		tfLogin.setBounds(217, 115, 150, 36);
+		getContentPane().add(tfLogin);
+		tfLogin.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(217, 184, 150, 36);
-		getContentPane().add(textField_1);
+		tfPassword = new JTextField();
+		tfPassword.setColumns(10);
+		tfPassword.setBounds(217, 184, 150, 36);
+		getContentPane().add(tfPassword);
 		
-		JLabel lblNewLabel = new JLabel("New label");
-		lblNewLabel.setBounds(117, 126, 46, 14);
-		getContentPane().add(lblNewLabel);
+		JLabel lblLogin = new JLabel("Login :");
+		lblLogin.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		lblLogin.setBounds(109, 115, 82, 36);
+		getContentPane().add(lblLogin);
 		
-		JLabel lblNewLabel_1 = new JLabel("New label");
-		lblNewLabel_1.setBounds(117, 195, 46, 14);
-		getContentPane().add(lblNewLabel_1);
+		JLabel lblPassword = new JLabel("Mot de passe : ");
+		lblPassword.setFont(new Font("Tahoma", Font.PLAIN, 24));
+		lblPassword.setBounds(21, 184, 167, 36);
+		getContentPane().add(lblPassword);
 
 	}
 }
