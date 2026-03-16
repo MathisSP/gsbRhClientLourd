@@ -3,13 +3,10 @@ package VUES;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 import BDD.ConnexionDB;
 
 import javax.swing.JButton;
-import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
@@ -26,22 +23,6 @@ public class Login extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JTextField tfLogin;
 	private JTextField tfPassword;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Login frame = new Login();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	private boolean verifierIdentifiants(String username, String password) {
 	    String sql = "SELECT * FROM utilisateur WHERE login = ? AND mdp = ?";
@@ -105,8 +86,8 @@ public class Login extends JFrame {
 
 		        if (verifierIdentifiants(username, password)) {
 		            // Connexion réussie → ouvrir la page suivante
-		            PageTest page = new PageTest();
-		            page.setVisible(true);
+		            Menu pageMenu = new Menu();
+		            pageMenu.setVisible(true);
 		            dispose(); // ferme la fenêtre de login
 		        } else {
 		            JOptionPane.showMessageDialog(null, "Identifiants incorrects.", "Erreur", JOptionPane.ERROR_MESSAGE);

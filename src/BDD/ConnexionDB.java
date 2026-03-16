@@ -12,4 +12,13 @@ public class ConnexionDB {
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
+    
+    //	 fermeture de la connexion
+	public static void close(){
+		try { 
+			ConnexionDB.close();
+		}
+		catch(Exception e) {e.printStackTrace();
+		System.out.println("problème lors de la fermeture");}
+	}
 }
