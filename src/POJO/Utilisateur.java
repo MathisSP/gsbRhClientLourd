@@ -3,7 +3,7 @@ package POJO;
 import java.sql.Date;
 
 public class Utilisateur {
-	int idUtilisateur;
+	String idUtilisateur;
 	String nom;
 	String prenom;
 	String login;
@@ -16,7 +16,7 @@ public class Utilisateur {
 	Date date_modif_mdp;
 	int idRegion;
 	
-	public Utilisateur(int idUtilisateur, String nom, String prenom, String login, String mdp, String adresse,
+	public Utilisateur(String idUtilisateur, String nom, String prenom, String login, String mdp, String adresse,
 			String cp, String ville, Date dateEmbauche, String idRole, Date date_modif_mdp, int idRegion) {
 		super();
 		this.idUtilisateur = idUtilisateur;
@@ -33,11 +33,11 @@ public class Utilisateur {
 		this.idRegion = idRegion;
 	}
 
-	public int getIdUtilisateur() {
+	public String getIdUtilisateur() {
 		return idUtilisateur;
 	}
 
-	public void setIdUtilisateur(int idUtilisateur) {
+	public void setIdUtilisateur(String idUtilisateur) {
 		this.idUtilisateur = idUtilisateur;
 	}
 
