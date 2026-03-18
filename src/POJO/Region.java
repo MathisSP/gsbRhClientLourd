@@ -28,7 +28,6 @@ public class Region {
 
 	@Override
 	public String toString() {
-		return "Region [idRegion=" + idRegion + ", libelleRegion=" + libelleRegion + "]";
+		return "\nRole : \nidRegion : " + idRegion + "\nlibelleRegion : " + libelleRegion;
 	}
-	
 }

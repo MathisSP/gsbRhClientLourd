@@ -2,8 +2,11 @@ package POJO;
 
 import java.sql.Date;
 
+import DAO.RegionDAO;
+import DAO.RoleDAO;
+
 public class Utilisateur {
-	String idUtilisateur;
+	int idUtilisateur;
 	String nom;
 	String prenom;
 	String login;
@@ -12,12 +15,12 @@ public class Utilisateur {
 	String cp;
 	String ville;
 	Date dateEmbauche;
-	String idRole;
+	Role idRole;
 	Date date_modif_mdp;
-	int idRegion;
+	Region idRegion;
 	
-	public Utilisateur(String idUtilisateur, String nom, String prenom, String login, String mdp, String adresse,
-			String cp, String ville, Date dateEmbauche, String idRole, Date date_modif_mdp, int idRegion) {
+	public Utilisateur(int idUtilisateur, String nom, String prenom, String login, String mdp, String adresse,
+			String cp, String ville, Date dateEmbauche, Role idRole, Date date_modif_mdp, Region idRegion) {
 		super();
 		this.idUtilisateur = idUtilisateur;
 		this.nom = nom;
@@ -33,11 +36,11 @@ public class Utilisateur {
 		this.idRegion = idRegion;
 	}
 
-	public String getIdUtilisateur() {
+	public int getIdUtilisateur() {
 		return idUtilisateur;
 	}
 
-	public void setIdUtilisateur(String idUtilisateur) {
+	public void setIdUtilisateur(int idUtilisateur) {
 		this.idUtilisateur = idUtilisateur;
 	}
 
@@ -105,11 +108,11 @@ public class Utilisateur {
 		this.dateEmbauche = dateEmbauche;
 	}
 
-	public String getIdRole() {
+	public Role getIdRole() {
 		return idRole;
 	}
 
-	public void setIdRole(String idRole) {
+	public void setIdRole(Role idRole) {
 		this.idRole = idRole;
 	}
 
@@ -121,11 +124,11 @@ public class Utilisateur {
 		this.date_modif_mdp = date_modif_mdp;
 	}
 
-	public int getIdRegion() {
+	public Region getIdRegion() {
 		return idRegion;
 	}
 
-	public void setIdRegion(int idRegion) {
+	public void setIdRegion(Region idRegion) {
 		this.idRegion = idRegion;
 	}
 
@@ -133,8 +136,8 @@ public class Utilisateur {
 	public String toString() {
 		return "Utilisateur [idUtilisateur=" + idUtilisateur + ", nom=" + nom + ", prenom=" + prenom + ", login="
 				+ login + ", mdp=" + mdp + ", adresse=" + adresse + ", cp=" + cp + ", ville=" + ville
-				+ ", dateEmbauche=" + dateEmbauche + ", idRole=" + idRole + ", date_modif_mdp=" + date_modif_mdp
-				+ ", idRegion=" + idRegion + "]";
+				+ ", dateEmbauche=" + dateEmbauche + ", idRole=" + RoleDAO.findRole(idRole.idRole)  + ", date_modif_mdp=" + date_modif_mdp
+				+ ", idRegion=" + RegionDAO.findRegion(idRegion.idRegion) + "]";
 	}
 	
 }

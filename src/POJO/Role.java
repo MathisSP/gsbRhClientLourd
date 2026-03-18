@@ -1,20 +1,20 @@
 package POJO;
 
 public class Role {
-	int idRole;
+	String idRole;
 	String libelleRole;
 	
-	public Role(int idRole, String libelleRole) {
+	public Role(String idRole, String libelleRole) {
 		super();
 		this.idRole = idRole;
 		this.libelleRole = libelleRole;
 	}
 
-	public int getIdRole() {
+	public String getIdRole() {
 		return idRole;
 	}
 
-	public void setIdRole(int idRole) {
+	public void setIdRole(String idRole) {
 		this.idRole = idRole;
 	}
 
@@ -28,7 +28,7 @@ public class Role {
 
 	@Override
 	public String toString() {
-		return "Role [idRole=" + idRole + ", libelleRole=" + libelleRole + "]";
+		return "\nRole : \nidRole : " + idRole + "\nlibelleRole : " + libelleRole;
 	}
 	
 }
