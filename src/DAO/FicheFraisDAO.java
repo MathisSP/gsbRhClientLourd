@@ -47,8 +47,8 @@ public class FicheFraisDAO extends DAO<FicheFrais> {
 	    try {
 	        conn = ConnexionDB.getConnection();
 
-	        String sql = "SELECT fichefrais.idUtilisateur, utilisateur.nom, utilisateur.prenom\r\n"
-	        		+ "FROM fichefrais\r\n"
+	        String sql = "SELECT fichefrais.idUtilisateur, utilisateur.nom, utilisateur.prenom"
+	        		+ "FROM fichefrais"
 	        		+ "JOIN utilisateur ON fichefrais.idUtilisateur = utilisateur.idUtilisateur";
 
 	        ResultSet result = conn.createStatement().executeQuery(sql);

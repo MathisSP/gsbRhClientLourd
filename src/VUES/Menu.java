@@ -33,43 +33,64 @@ public class Menu extends JFrame {
 	 * Create the frame.
 	 */
 	public Menu(String role) {
-	    getContentPane().setLayout(null);
 
 	    // Bouton Secrétaire RH — visible uniquement pour le rôle "s" (à adapter)
-	    JButton btnSecretaireRH1 = new JButton("Secretaire RH Bouton 1");
-	    btnSecretaireRH1.addActionListener(new ActionListener() {
+	    JButton btnlistVisiteur = new JButton("Liste Visiteurs");
+	    btnlistVisiteur.setBounds(10, 91, 164, 40);
+	    btnlistVisiteur.setVisible(false);
+	    btnlistVisiteur.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	            new PageTest().setVisible(true);
 	        }
 	    });
-	    btnSecretaireRH1.setBounds(40, 91, 164, 40);
-	    getContentPane().add(btnSecretaireRH1);
+	    getContentPane().setLayout(null);
+	    getContentPane().add(btnlistVisiteur);
 
 	    // Bouton Directeur RH — visible uniquement pour le rôle "d"
-	    JButton btnDirecteurRH1 = new JButton("Directeur RH Bouton 1");
-	    btnDirecteurRH1.addActionListener(new ActionListener() {
+	    JButton btnFicheVisiteur = new JButton("Consulter les fiches des visiteurs");
+	    btnFicheVisiteur.setBounds(276, 91, 183, 40);
+	    btnFicheVisiteur.setVisible(false);
+	    btnFicheVisiteur.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	            new PageTest().setVisible(true);
 	        }
 	    });
-	    btnDirecteurRH1.setBounds(261, 91, 183, 40);
-	    getContentPane().add(btnDirecteurRH1);
+	    getContentPane().add(btnFicheVisiteur);
 
 	    // Bouton Responsable Frais — visible uniquement pour le rôle "r"
-	    JButton btnResponsableFrais1 = new JButton("Responsable Frais Bouton 1");
-	    btnResponsableFrais1.addActionListener(new ActionListener() {
+	    JButton btnStatVisiteur = new JButton("Les statistiques des visiteurs");
+	    btnStatVisiteur.setBounds(10, 158, 196, 40);
+	    btnStatVisiteur.setVisible(false);
+	    btnStatVisiteur.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	            new PageTest().setVisible(true);
 	        }
 	    });
-	    btnResponsableFrais1.setBounds(111, 157, 240, 40);
-	    getContentPane().add(btnResponsableFrais1);
+	    getContentPane().add(btnStatVisiteur);
+	    
+	    JButton btnStatRegion = new JButton("Les Statistiques des Régions");
+	    btnStatRegion.setVisible(false);
+	    btnStatRegion.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    	}
+	    });
+	    btnStatRegion.setBounds(282, 158, 177, 40);
+	    getContentPane().add(btnStatRegion);
 
 	    // Affichage selon le rôle
-	    btnSecretaireRH1.setVisible(role.equals("s"));
-	    btnDirecteurRH1.setVisible(role.equals("d"));
-	    btnResponsableFrais1.setVisible(role.equals("r"));
-
+	    if (role.equals("s")) {
+	    	btnlistVisiteur.setVisible(true);
+	  	    btnFicheVisiteur.setVisible(true);
+	    }
+	    if(role.equals("d")) {
+	    	btnFicheVisiteur.setVisible(true);
+	    }
+	    if(role.equals("r")) {
+	    	btnStatVisiteur.setVisible(true);
+		    btnStatRegion.setVisible(true);
+	    }
+	    
+	    
 	    setTitle("GSB - Accueil");
 	    setSize(500, 300);
 	    setLocationRelativeTo(null);
