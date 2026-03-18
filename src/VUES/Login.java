@@ -24,22 +24,23 @@ public class Login extends JFrame {
 	private JTextField tfLogin;
 	private JTextField tfPassword;
 
-	private boolean verifierIdentifiants(String username, String password) {
-	    String sql = "SELECT * FROM utilisateur WHERE login = ? AND mdp = ?";
+	private String getRole(String username, String password) {
+	    String sql = "SELECT idRole FROM utilisateur WHERE login = ? AND mdp = ?";
 
-	    try (Connection conn = ConnexionDB.getConnection();
-	         PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+	    try {
+	        Connection conn = ConnexionDB.getConnection();
+	        PreparedStatement stmt = conn.prepareStatement(sql);
 	        stmt.setString(1, username);
 	        stmt.setString(2, password);
 
 	        ResultSet rs = stmt.executeQuery();
-	        return rs.next(); // true si un enregistrement correspond
-
+	        if (rs.next()) {
+	            return rs.getString("idRole");
+	        }
 	    } catch (SQLException ex) {
 	        ex.printStackTrace();
-	        return false;
 	    }
+	    return null;
 	}
 	
 	/**
@@ -84,11 +85,12 @@ public class Login extends JFrame {
 		        String username = tfLogin.getText();
 		        String password = tfPassword.getText();
 
-		        if (verifierIdentifiants(username, password)) {
-		            // Connexion réussie → ouvrir la page suivante
-		            Menu pageMenu = new Menu();
+		        String role = getRole(username, password);
+
+		        if (role != null) {
+		            Menu pageMenu = new Menu(role); // on passe le rôle au Menu
 		            pageMenu.setVisible(true);
-		            dispose(); // ferme la fenêtre de login
+		            dispose();
 		        } else {
 		            JOptionPane.showMessageDialog(null, "Identifiants incorrects.", "Erreur", JOptionPane.ERROR_MESSAGE);
 		        }
