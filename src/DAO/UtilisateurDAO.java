@@ -1,10 +1,13 @@
 package DAO;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JOptionPane;
 
 import BDD.ConnexionDB;
 import POJO.Region;
@@ -29,11 +32,33 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+	
 	@Override
 	public boolean update(Utilisateur obj) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public static void updateUtilisateur(String id, String nom, String prenom, String login, 
+            String mdp, String adresse, String cp, String ville, String idRole) {
+		String sql = "UPDATE utilisateur SET nom=?, prenom=?, login=?, mdp=?, adresse=?, cp=?, ville=?, idRole=? WHERE idUtilisateur=?";
+		try {
+			Connection conn = ConnexionDB.getConnection();
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt.setString(1, nom);
+			stmt.setString(2, prenom);
+			stmt.setString(3, login);
+			stmt.setString(4, mdp);
+			stmt.setString(5, adresse);
+			stmt.setString(6, cp);
+			stmt.setString(7, ville);
+			stmt.setString(8, idRole);
+			stmt.setString(9, id);
+			stmt.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Utilisateur modifié avec succès !");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

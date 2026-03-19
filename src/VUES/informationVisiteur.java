@@ -5,9 +5,15 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import DAO.UtilisateurDAO;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import POJO.Utilisateur;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class informationVisiteur extends JFrame {
 
@@ -35,6 +41,7 @@ public class informationVisiteur extends JFrame {
 	private JTextField textidRole;
 	private JTextField textAdresse;
 	private JTextField textLogin;
+	private Utilisateur utilisateurEnCours;
 
 	/**
 	 * Launch the application.
@@ -43,7 +50,7 @@ public class informationVisiteur extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					informationVisiteur frame = new informationVisiteur();
+					informationVisiteur frame = new informationVisiteur(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -55,7 +62,9 @@ public class informationVisiteur extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public informationVisiteur() {
+	public informationVisiteur(Utilisateur u) {
+	    this.utilisateurEnCours = u;
+	    // ... reste du code ...	
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -85,6 +94,22 @@ public class informationVisiteur extends JFrame {
 		contentPane.add(getTextAdresse());
 		contentPane.add(getTextLogin());
 
+		// Si u n'est pas null, on est en mode modification → on pré-remplit les champs
+	    if (u != null) {
+	        getLabelCreerVisteur().setText("Modification Visiteur");
+	        getIdAsaisir().setText(u.getIdUtilisateur());
+	        getIdAsaisir().setEditable(false); // on ne change pas l'ID
+	        getTextNom().setText(u.getNom());
+	        getTextPrenom().setText(u.getPrenom());
+	        getTextLogin().setText(u.getLogin());
+	        getTextMdp().setText(u.getMdp());
+	        getTextAdresse().setText(u.getAdresse());
+	        getTextCp().setText(u.getCp());
+	        getTextVille().setText(u.getVille());
+	        getTextdateEmbauche().setText(u.getDateEmbauche().toString());
+	        getTextidRole().setText(u.getIdRole().getIdRole());
+	    }
+		
 	}
 
 	public JLabel getLabelCreerVisteur() {
@@ -189,11 +214,38 @@ public class informationVisiteur extends JFrame {
 		return lblVille;
 	}
 	public JButton getBtnValiderCreationVisiteur() {
-		if (btnValiderCreationVisiteur == null) {
-			btnValiderCreationVisiteur = new JButton("Valider");
-			btnValiderCreationVisiteur.setBounds(185, 227, 89, 23);
-		}
-		return btnValiderCreationVisiteur;
+	    if (btnValiderCreationVisiteur == null) {
+	        btnValiderCreationVisiteur = new JButton("Valider");
+	        btnValiderCreationVisiteur.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent e) {
+	                // Récupère les valeurs des champs
+	                String id = getIdAsaisir().getText();
+	                String nom = getTextNom().getText();
+	                String prenom = getTextPrenom().getText();
+	                String login = getTextLogin().getText();
+	                String mdp = getTextMdp().getText();
+	                String adresse = getTextAdresse().getText();
+	                String cp = getTextCp().getText();
+	                String ville = getTextVille().getText();
+	                String idRole = getTextidRole().getText();
+
+	                if (utilisateurEnCours != null) {
+	                    // Mode modification → UPDATE en base
+	                    UtilisateurDAO.updateUtilisateur(id, nom, prenom, login, mdp, adresse, cp, ville, idRole);
+	                } else {
+	                    // Mode création → INSERT en base
+	                    // UtilisateurDAO.createUtilisateur(id, nom, prenom, login, mdp, adresse, cp, ville, idRole);
+	                }
+
+	                // Retour à la liste
+	                listeVisiteurs liste = new listeVisiteurs();
+	                liste.setVisible(true);
+	                dispose();
+	            }
+	        });
+	        btnValiderCreationVisiteur.setBounds(185, 227, 89, 23);
+	    }
+	    return btnValiderCreationVisiteur;
 	}
 	public JTextField getTextMdp() {
 		if (textMdp == null) {

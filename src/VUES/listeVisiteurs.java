@@ -7,12 +7,16 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+
 import java.util.ArrayList;
 import javax.swing.JScrollPane;
 import DAO.UtilisateurDAO;
@@ -27,6 +31,7 @@ public class listeVisiteurs extends JFrame {
 	private JButton btnModification;
 	private JButton btnSupprimer;
 	private JTable table;
+	private ArrayList<Utilisateur> utilisateurs; // ajout ici
 
 	/**
 	 * Launch the application.
@@ -63,7 +68,7 @@ public class listeVisiteurs extends JFrame {
 	    String[] colonnes = {"ID", "Nom", "Prénom", "Login", "Ville", "Rôle"};
 
 	    // Récupération des utilisateurs
-	    ArrayList<Utilisateur> utilisateurs = UtilisateurDAO.findAllUtilisateur();
+	    utilisateurs = UtilisateurDAO.findAllUtilisateur();
 
 	    // Remplissage des données
 	    String[][] data = new String[utilisateurs.size()][6];
@@ -84,6 +89,9 @@ public class listeVisiteurs extends JFrame {
 	            return false;
 	        }
 	    };
+	    
+	    // Sélection d'une seule ligne à la fois
+	    table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 	    // Ajout du tableau dans un ScrollPane pour avoir la barre de défilement
 	    JScrollPane scrollPane = new JScrollPane(table);
@@ -99,12 +107,21 @@ public class listeVisiteurs extends JFrame {
 		}
 		return labelVisiteurs;
 	}
+	
+	private Utilisateur getUtilisateurSelectionne() {
+	    int ligneSelectionnee = table.getSelectedRow();
+	    if (ligneSelectionnee == -1) {
+	        JOptionPane.showMessageDialog(null, "Veuillez sélectionner un utilisateur.", "Attention", JOptionPane.WARNING_MESSAGE);
+	        return null;
+	    }
+	    return utilisateurs.get(ligneSelectionnee);
+	}
 	public JButton getBtnCreationVisiteur() {
 		if (btnCreationVisiteur == null) {
 			btnCreationVisiteur = new JButton("Créer");
 			btnCreationVisiteur.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					informationVisiteur newVisiteur = new informationVisiteur();
+					informationVisiteur newVisiteur = new informationVisiteur(null);
 					newVisiteur.setVisible(true);
 					dispose();
 				}
@@ -114,17 +131,42 @@ public class listeVisiteurs extends JFrame {
 		return btnCreationVisiteur;
 	}
 	public JButton getBtnModification() {
-		if (btnModification == null) {
-			btnModification = new JButton("Modifier");
-			btnModification.setBounds(225, 318, 75, 20);
-		}
-		return btnModification;
+	    if (btnModification == null) {
+	        btnModification = new JButton("Modifier");
+	        btnModification.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent e) {
+	                Utilisateur u = getUtilisateurSelectionne();
+	                if (u != null) {
+	                    informationVisiteur modif = new informationVisiteur(u);
+	                    modif.setVisible(true);
+	                    dispose();
+	                }
+	            }
+	        });
+	        btnModification.setBounds(225, 318, 75, 20);
+	    }
+	    return btnModification;
 	}
+
 	public JButton getBtnSupprimer() {
-		if (btnSupprimer == null) {
-			btnSupprimer = new JButton("Supprimer");
-			btnSupprimer.setBounds(389, 318, 75, 20);
-		}
-		return btnSupprimer;
+	    if (btnSupprimer == null) {
+	        btnSupprimer = new JButton("Supprimer");
+	        btnSupprimer.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent e) {
+	                Utilisateur u = getUtilisateurSelectionne();
+	                if (u != null) {
+	                    int confirmation = JOptionPane.showConfirmDialog(null, 
+	                        "Supprimer " + u.getNom() + " " + u.getPrenom() + " ?", 
+	                        "Confirmation", JOptionPane.YES_NO_OPTION);
+	                    if (confirmation == JOptionPane.YES_OPTION) {
+	                        // Plus tard : appel à UtilisateurDAO.delete(u)
+	                        System.out.println("Suppression de : " + u.getNom());
+	                    }
+	                }
+	            }
+	        });
+	        btnSupprimer.setBounds(389, 318, 75, 20);
+	    }
+	    return btnSupprimer;
 	}
 }
