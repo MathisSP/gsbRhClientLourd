@@ -3,8 +3,6 @@ package VUES;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -36,7 +34,7 @@ public class Menu extends JFrame {
 
 	    // Bouton Secrétaire RH — visible uniquement pour le rôle "s" (à adapter)
 	    JButton btnlistVisiteur = new JButton("Liste des visiteurs");
-	    btnlistVisiteur.setBounds(10, 91, 164, 40);
+	    btnlistVisiteur.setBounds(62, 155, 183, 54);
 	    btnlistVisiteur.setVisible(false);
 	    btnlistVisiteur.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
@@ -46,9 +44,8 @@ public class Menu extends JFrame {
 	    getContentPane().setLayout(null);
 	    getContentPane().add(btnlistVisiteur);
 
-	    // Bouton Directeur RH — visible uniquement pour le rôle "d"
 	    JButton btnFicheVisiteur = new JButton("Consulter les fiches des visiteurs");
-	    btnFicheVisiteur.setBounds(276, 91, 183, 40);
+	    btnFicheVisiteur.setBounds(381, 155, 189, 54);
 	    btnFicheVisiteur.setVisible(false);
 	    btnFicheVisiteur.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
@@ -56,10 +53,21 @@ public class Menu extends JFrame {
 	        }
 	    });
 	    getContentPane().add(btnFicheVisiteur);
+	    
+	    // Bouton Directeur RH — visible uniquement pour le rôle "d"
+	    JButton btnFicheVisiteurDirecteur = new JButton("Consulter les fiches des visiteurs");
+	    btnFicheVisiteurDirecteur.setBounds(229, 155, 183, 54);
+	    btnFicheVisiteurDirecteur.setVisible(false);
+	    btnFicheVisiteurDirecteur.addActionListener(new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            new PageTest().setVisible(true);
+	        }
+	    });
+	    getContentPane().add(btnFicheVisiteurDirecteur);
 
 	    // Bouton Responsable Frais — visible uniquement pour le rôle "r"
 	    JButton btnStatVisiteur = new JButton("Les statistiques des visiteurs");
-	    btnStatVisiteur.setBounds(10, 158, 196, 40);
+	    btnStatVisiteur.setBounds(62, 155, 183, 54);
 	    btnStatVisiteur.setVisible(false);
 	    btnStatVisiteur.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
@@ -74,7 +82,7 @@ public class Menu extends JFrame {
 	    	public void actionPerformed(ActionEvent e) {
 	    	}
 	    });
-	    btnStatRegion.setBounds(282, 158, 177, 40);
+	    btnStatRegion.setBounds(381, 155, 189, 54);
 	    getContentPane().add(btnStatRegion);
 
 	    // Affichage selon le rôle
@@ -83,7 +91,7 @@ public class Menu extends JFrame {
 	  	    btnFicheVisiteur.setVisible(true);
 	    }
 	    if(role.equals("d")) {
-	    	btnFicheVisiteur.setVisible(true);
+	    	btnFicheVisiteurDirecteur.setVisible(true);
 	    }
 	    if(role.equals("r")) {
 	    	btnStatVisiteur.setVisible(true);
@@ -92,7 +100,7 @@ public class Menu extends JFrame {
 	    
 	    
 	    setTitle("GSB - Accueil");
-	    setSize(500, 300);
+	    setSize(650, 400);
 	    setLocationRelativeTo(null);
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
