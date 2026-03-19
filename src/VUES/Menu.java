@@ -35,7 +35,7 @@ public class Menu extends JFrame {
 	public Menu(String role) {
 
 	    // Bouton Secrétaire RH — visible uniquement pour le rôle "s" (à adapter)
-	    JButton btnlistVisiteur = new JButton("Liste Visiteurs");
+	    JButton btnlistVisiteur = new JButton("Liste des visiteurs");
 	    btnlistVisiteur.setBounds(10, 91, 164, 40);
 	    btnlistVisiteur.setVisible(false);
 	    btnlistVisiteur.addActionListener(new ActionListener() {

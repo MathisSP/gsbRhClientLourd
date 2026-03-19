@@ -4,7 +4,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnexionDB {
-    private static final String URL      = "jdbc:mysql://localhost:3306/gsbfrais2025-ap?useSSL=false";
+    private static final String URL      = "jdbc:mysql://localhost:3306/gsbfrais-2025-ap?useSSL=false";
     private static final String USER     = "myroot";
     private static final String PASSWORD = "root123*";
     
