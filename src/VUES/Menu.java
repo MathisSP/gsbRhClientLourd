@@ -38,7 +38,9 @@ public class Menu extends JFrame {
 	    btnlistVisiteur.setVisible(false);
 	    btnlistVisiteur.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-	            new PageTest().setVisible(true);
+	            listeVisiteurs liste = new listeVisiteurs(role); // passer le rôle ici
+	            liste.setVisible(true);
+	            dispose();
 	        }
 	    });
 	    getContentPane().setLayout(null);

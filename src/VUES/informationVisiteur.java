@@ -42,6 +42,7 @@ public class informationVisiteur extends JFrame {
 	private JTextField textAdresse;
 	private JTextField textLogin;
 	private Utilisateur utilisateurEnCours;
+	private String role; // ajouter cet attribut
 
 	/**
 	 * Launch the application.
@@ -50,7 +51,7 @@ public class informationVisiteur extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					informationVisiteur frame = new informationVisiteur(null);
+					informationVisiteur frame = new informationVisiteur(null, "s");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -62,9 +63,9 @@ public class informationVisiteur extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public informationVisiteur(Utilisateur u) {
+	public informationVisiteur(Utilisateur u,String role) {
 	    this.utilisateurEnCours = u;
-	    // ... reste du code ...	
+	    this.role = role;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -93,23 +94,41 @@ public class informationVisiteur extends JFrame {
 		contentPane.add(getTextidRole());
 		contentPane.add(getTextAdresse());
 		contentPane.add(getTextLogin());
-
-		// Si u n'est pas null, on est en mode modification → on pré-remplit les champs
-	    if (u != null) {
-	        getLabelCreerVisteur().setText("Modification Visiteur");
-	        getIdAsaisir().setText(u.getIdUtilisateur());
-	        getIdAsaisir().setEditable(false); // on ne change pas l'ID
-	        getTextNom().setText(u.getNom());
-	        getTextPrenom().setText(u.getPrenom());
-	        getTextLogin().setText(u.getLogin());
-	        getTextMdp().setText(u.getMdp());
-	        getTextAdresse().setText(u.getAdresse());
-	        getTextCp().setText(u.getCp());
-	        getTextVille().setText(u.getVille());
-	        getTextdateEmbauche().setText(u.getDateEmbauche().toString());
-	        getTextidRole().setText(u.getIdRole().getIdRole());
-	    }
 		
+		JButton btnRetour = new JButton("Retour");
+		btnRetour.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				listeVisiteurs listeDesVisiteurs = new listeVisiteurs(role);
+				listeDesVisiteurs.setVisible(true);
+				dispose();
+			}
+		});
+		btnRetour.setBounds(254, 227, 89, 23);
+		contentPane.add(btnRetour);
+
+		// Si u n'est pas null, on est en modification
+		if (u != null) {
+		    getLabelCreerVisteur().setText("Modification Visiteur");
+		    getIdAsaisir().setText(u.getIdUtilisateur());
+		    getIdAsaisir().setEditable(false);
+		    getTextNom().setText(u.getNom());
+		    getTextPrenom().setText(u.getPrenom());
+		    getTextLogin().setText(u.getLogin());
+		    getTextMdp().setText(u.getMdp());
+		    getTextAdresse().setText(u.getAdresse());
+		    getTextCp().setText(u.getCp());
+		    getTextVille().setText(u.getVille());
+		    getTextdateEmbauche().setText(u.getDateEmbauche().toString());
+		    getTextidRole().setText(u.getIdRole().getIdRole());
+		} else {
+		    // Mode création
+		    getTextidRole().setText("v");
+		    getTextidRole().setEditable(false); // rôle v de base
+
+		    String dateAujourdhui = java.time.LocalDate.now().toString();
+		    getTextdateEmbauche().setText(dateAujourdhui);
+		    getTextdateEmbauche().setEditable(false);
+		}
 	}
 
 	public JLabel getLabelCreerVisteur() {
@@ -238,12 +257,12 @@ public class informationVisiteur extends JFrame {
 	                }
 
 	                // Retour à la liste
-	                listeVisiteurs liste = new listeVisiteurs();
+	                listeVisiteurs liste = new listeVisiteurs(role);
 	                liste.setVisible(true);
 	                dispose();
 	            }
 	        });
-	        btnValiderCreationVisiteur.setBounds(185, 227, 89, 23);
+	        btnValiderCreationVisiteur.setBounds(98, 227, 89, 23);
 	    }
 	    return btnValiderCreationVisiteur;
 	}

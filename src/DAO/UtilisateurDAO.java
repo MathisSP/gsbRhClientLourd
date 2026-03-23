@@ -38,13 +38,26 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	public static void deleteUtilisateur(String id) {
+	    String requeteSql = "DELETE FROM utilisateur WHERE idUtilisateur = ?";
+	    try {
+	        Connection conn = ConnexionDB.getConnection();
+	        PreparedStatement stmt = conn.prepareStatement(requeteSql);
+	        stmt.setString(1, id);
+	        stmt.executeUpdate();
+	        JOptionPane.showMessageDialog(null, "Utilisateur supprimé avec succès !");
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
 
 	public static void updateUtilisateur(String id, String nom, String prenom, String login, 
             String mdp, String adresse, String cp, String ville, String idRole) {
-		String sql = "UPDATE utilisateur SET nom=?, prenom=?, login=?, mdp=?, adresse=?, cp=?, ville=?, idRole=? WHERE idUtilisateur=?";
+		String requeteSql = "UPDATE utilisateur SET nom=?, prenom=?, login=?, mdp=?, adresse=?, cp=?, ville=?, idRole=? WHERE idUtilisateur=?";
 		try {
 			Connection conn = ConnexionDB.getConnection();
-			PreparedStatement stmt = conn.prepareStatement(sql);
+			PreparedStatement stmt = conn.prepareStatement(requeteSql);
 			stmt.setString(1, nom);
 			stmt.setString(2, prenom);
 			stmt.setString(3, login);

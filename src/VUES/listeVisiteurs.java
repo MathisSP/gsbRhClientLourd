@@ -32,6 +32,8 @@ public class listeVisiteurs extends JFrame {
 	private JButton btnSupprimer;
 	private JTable table;
 	private ArrayList<Utilisateur> utilisateurs; // ajout ici
+	private JButton btnRetour;
+	private String role; // ajouter cet attribut
 
 	/**
 	 * Launch the application.
@@ -40,7 +42,7 @@ public class listeVisiteurs extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					listeVisiteurs frame = new listeVisiteurs();
+					listeVisiteurs frame = new listeVisiteurs("s");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -52,7 +54,8 @@ public class listeVisiteurs extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public listeVisiteurs() {
+	public listeVisiteurs(String role) {
+		this.role = role;
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setBounds(100, 100, 550, 400);
 	    contentPane = new JPanel();
@@ -97,6 +100,7 @@ public class listeVisiteurs extends JFrame {
 	    JScrollPane scrollPane = new JScrollPane(table);
 	    scrollPane.setBounds(50, 69, 410, 229);
 	    contentPane.add(scrollPane);
+	    contentPane.add(getBtnRetour());
 	}
 	public JLabel getLabelVisiteurs() {
 		if (labelVisiteurs == null) {
@@ -121,7 +125,7 @@ public class listeVisiteurs extends JFrame {
 			btnCreationVisiteur = new JButton("Créer");
 			btnCreationVisiteur.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					informationVisiteur newVisiteur = new informationVisiteur(null);
+					informationVisiteur newVisiteur = new informationVisiteur(null, role);
 					newVisiteur.setVisible(true);
 					dispose();
 				}
@@ -137,7 +141,7 @@ public class listeVisiteurs extends JFrame {
 	            public void actionPerformed(ActionEvent e) {
 	                Utilisateur u = getUtilisateurSelectionne();
 	                if (u != null) {
-	                    informationVisiteur modif = new informationVisiteur(u);
+	                    informationVisiteur modif = new informationVisiteur(u, role);
 	                    modif.setVisible(true);
 	                    dispose();
 	                }
@@ -159,8 +163,12 @@ public class listeVisiteurs extends JFrame {
 	                        "Supprimer " + u.getNom() + " " + u.getPrenom() + " ?", 
 	                        "Confirmation", JOptionPane.YES_NO_OPTION);
 	                    if (confirmation == JOptionPane.YES_OPTION) {
-	                        // Plus tard : appel à UtilisateurDAO.delete(u)
-	                        System.out.println("Suppression de : " + u.getNom());
+	                        UtilisateurDAO.deleteUtilisateur(u.getIdUtilisateur()); // appel DAO
+	                        
+	                        // Rafraîchir la page
+	                        listeVisiteurs nouvelleListe = new listeVisiteurs(role);
+	                        nouvelleListe.setVisible(true);
+	                        dispose();
 	                    }
 	                }
 	            }
@@ -168,5 +176,20 @@ public class listeVisiteurs extends JFrame {
 	        btnSupprimer.setBounds(389, 318, 75, 20);
 	    }
 	    return btnSupprimer;
+	}
+	
+	private JButton getBtnRetour() {
+	    if (btnRetour == null) {
+	        btnRetour = new JButton("X");
+	        btnRetour.addActionListener(new ActionListener() {
+	            public void actionPerformed(ActionEvent e) {
+	                Menu reMenu = new Menu(role); // role est maintenant connu
+	                reMenu.setVisible(true);
+	                dispose();
+	            }
+	        });
+	        btnRetour.setBounds(501, 13, 23, 20);
+	    }
+	    return btnRetour;
 	}
 }
