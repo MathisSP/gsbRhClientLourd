@@ -45,27 +45,26 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 	        conn.setAutoCommit(false);
 
 	        // 1. Vérifier que TOUTES les fiches sont en état RB
-	        PreparedStatement psVerif = conn.prepareStatement("SELECT idFiche, idEtat FROM fichefrais WHERE idUtilisateur = ?");
-	        psVerif.setString(1, idUtilisateur);
-	        ResultSet rsVerif = psVerif.executeQuery();
+	        PreparedStatement requeteVerifFiche = conn.prepareStatement("SELECT idFiche, idEtat FROM fichefrais WHERE idUtilisateur = ?");
+	        requeteVerifFiche.setString(1, idUtilisateur);
+	        ResultSet resultatVerif = requeteVerifFiche.executeQuery();
 
-	        while (rsVerif.next()) {
-	            String etat = rsVerif.getString("idEtat");
+	        while (resultatVerif.next()) {
+	            String etat = resultatVerif.getString("idEtat");
 	            if (!etat.equals("RB")) {
 	                conn.rollback();
-	                JOptionPane.showMessageDialog(null,
-	                    "Impossible de supprimer l'utilisateur , une fiche au moins n'est pas rembourser ");
+	                JOptionPane.showMessageDialog(null,"Impossible de supprimer l'utilisateur , une fiche au moins n'est pas rembourser ");
 	                return;
 	            }
 	        }
 
 	        // 2. Récupérer les idFiche pour supprimer les lignes associées
-	        PreparedStatement psFiches = conn.prepareStatement("SELECT idFiche FROM fichefrais WHERE idUtilisateur = ?");
-	        psFiches.setString(1, idUtilisateur);
-	        ResultSet rs = psFiches.executeQuery();
+	        PreparedStatement requeteFiches = conn.prepareStatement("SELECT idFiche FROM fichefrais WHERE idUtilisateur = ?");
+	        requeteFiches.setString(1, idUtilisateur);
+	        ResultSet resultatFiches = requeteFiches.executeQuery();
 
-	        while (rs.next()) {
-	            int idFiche = rs.getInt("idFiche");
+	        while (resultatFiches.next()) {
+	            int idFiche = resultatFiches.getInt("idFiche");
 
 	            // 3. Supprimer les lignes forfait
 	            PreparedStatement psLFF = conn.prepareStatement("DELETE FROM lignefraisforfait WHERE idFiche = ?");
