@@ -39,16 +39,62 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 		return false;
 	}
 	
-	public static void deleteUtilisateur(String id) {
-	    String requeteSql = "DELETE FROM utilisateur WHERE idUtilisateur = ?";
+	public static void deleteUtilisateurComplete(String idUtilisateur) {
 	    try {
 	        Connection conn = ConnexionDB.getConnection();
-	        PreparedStatement stmt = conn.prepareStatement(requeteSql);
-	        stmt.setString(1, id);
-	        stmt.executeUpdate();
+	        conn.setAutoCommit(false); // Démarrage de la transaction
+
+	        // 1. Récupérer les idFiche liées à cet utilisateur
+	        PreparedStatement psFiches = conn.prepareStatement("SELECT idFiche FROM fichefrais WHERE idUtilisateur = ?");
+	        psFiches.setString(1, idUtilisateur);
+	        ResultSet rs = psFiches.executeQuery();
+
+	        while (rs.next()) {
+	            int idFiche = rs.getInt("idFiche");
+
+	            // 2. Supprimer les lignes forfait
+	            PreparedStatement psLFF = conn.prepareStatement(
+	                "DELETE FROM lignefraisforfait WHERE idFiche = ?");
+	            psLFF.setInt(1, idFiche);
+	            psLFF.executeUpdate();
+
+	            // 3. Supprimer les lignes hors forfait
+	            PreparedStatement psLFHF = conn.prepareStatement(
+	                "DELETE FROM lignefraishorsforfait WHERE idFiche = ?");
+	            psLFHF.setInt(1, idFiche);
+	            psLFHF.executeUpdate();
+	        }
+
+	        // 4. Supprimer les fiches de frais
+	        PreparedStatement psFiche = conn.prepareStatement(
+	            "DELETE FROM fichefrais WHERE idUtilisateur = ?");
+	        psFiche.setString(1, idUtilisateur);
+	        psFiche.executeUpdate();
+
+	        // 5. Supprimer l'utilisateur
+	        PreparedStatement psUser = conn.prepareStatement(
+	            "DELETE FROM utilisateur WHERE idUtilisateur = ?");
+	        psUser.setString(1, idUtilisateur);
+	        psUser.executeUpdate();
+
+	        conn.commit(); // Valider tout
 	        JOptionPane.showMessageDialog(null, "Utilisateur supprimé avec succès !");
+
 	    } catch (SQLException e) {
 	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(null, "Erreur lors de la suppression : " + e.getMessage(),
+	            "Erreur", JOptionPane.ERROR_MESSAGE);
+	        try {
+	            ConnexionDB.getConnection().rollback();
+	        } catch (SQLException ex) {
+	            ex.printStackTrace();
+	        }
+	    } finally {
+	        try {
+	            ConnexionDB.getConnection().setAutoCommit(true);
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
 	    }
 	}
 

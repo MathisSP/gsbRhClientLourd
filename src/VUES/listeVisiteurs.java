@@ -163,7 +163,7 @@ public class listeVisiteurs extends JFrame {
 	                        "Supprimer " + u.getNom() + " " + u.getPrenom() + " ?", 
 	                        "Confirmation", JOptionPane.YES_NO_OPTION);
 	                    if (confirmation == JOptionPane.YES_OPTION) {
-	                        UtilisateurDAO.deleteUtilisateur(u.getIdUtilisateur()); // appel DAO
+	                        UtilisateurDAO.deleteUtilisateurComplete(u.getIdUtilisateur()); // appel DAO
 	                        
 	                        // Rafraîchir la page
 	                        listeVisiteurs nouvelleListe = new listeVisiteurs(role);
