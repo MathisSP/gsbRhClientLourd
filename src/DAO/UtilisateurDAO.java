@@ -42,9 +42,24 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 	public static void deleteUtilisateurComplete(String idUtilisateur) {
 	    try {
 	        Connection conn = ConnexionDB.getConnection();
-	        conn.setAutoCommit(false); // Démarrage de la transaction
+	        conn.setAutoCommit(false);
 
-	        // 1. Récupérer les idFiche liées à cet utilisateur
+	        // 1. Vérifier que TOUTES les fiches sont en état RB
+	        PreparedStatement psVerif = conn.prepareStatement("SELECT idFiche, idEtat FROM fichefrais WHERE idUtilisateur = ?");
+	        psVerif.setString(1, idUtilisateur);
+	        ResultSet rsVerif = psVerif.executeQuery();
+
+	        while (rsVerif.next()) {
+	            String etat = rsVerif.getString("idEtat");
+	            if (!etat.equals("RB")) {
+	                conn.rollback();
+	                JOptionPane.showMessageDialog(null,
+	                    "Impossible de supprimer l'utilisateur , une fiche au moins n'est pas rembourser ");
+	                return;
+	            }
+	        }
+
+	        // 2. Récupérer les idFiche pour supprimer les lignes associées
 	        PreparedStatement psFiches = conn.prepareStatement("SELECT idFiche FROM fichefrais WHERE idUtilisateur = ?");
 	        psFiches.setString(1, idUtilisateur);
 	        ResultSet rs = psFiches.executeQuery();
@@ -52,49 +67,35 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 	        while (rs.next()) {
 	            int idFiche = rs.getInt("idFiche");
 
-	            // 2. Supprimer les lignes forfait
-	            PreparedStatement psLFF = conn.prepareStatement(
-	                "DELETE FROM lignefraisforfait WHERE idFiche = ?");
+	            // 3. Supprimer les lignes forfait
+	            PreparedStatement psLFF = conn.prepareStatement("DELETE FROM lignefraisforfait WHERE idFiche = ?");
 	            psLFF.setInt(1, idFiche);
 	            psLFF.executeUpdate();
 
-	            // 3. Supprimer les lignes hors forfait
-	            PreparedStatement psLFHF = conn.prepareStatement(
-	                "DELETE FROM lignefraishorsforfait WHERE idFiche = ?");
+	            // 4. Supprimer les lignes hors forfait
+	            PreparedStatement psLFHF = conn.prepareStatement("DELETE FROM lignefraishorsforfait WHERE idFiche = ?");
 	            psLFHF.setInt(1, idFiche);
 	            psLFHF.executeUpdate();
 	        }
 
-	        // 4. Supprimer les fiches de frais
-	        PreparedStatement psFiche = conn.prepareStatement(
-	            "DELETE FROM fichefrais WHERE idUtilisateur = ?");
+	        // 5. Supprimer les fiches de frais
+	        PreparedStatement psFiche = conn.prepareStatement("DELETE FROM fichefrais WHERE idUtilisateur = ?");
 	        psFiche.setString(1, idUtilisateur);
 	        psFiche.executeUpdate();
 
-	        // 5. Supprimer l'utilisateur
-	        PreparedStatement psUser = conn.prepareStatement(
-	            "DELETE FROM utilisateur WHERE idUtilisateur = ?");
+	        // 6. Supprimer l'utilisateur
+	        PreparedStatement psUser = conn.prepareStatement("DELETE FROM utilisateur WHERE idUtilisateur = ?");
 	        psUser.setString(1, idUtilisateur);
 	        psUser.executeUpdate();
 
-	        conn.commit(); // Valider tout
+	        conn.commit();
 	        JOptionPane.showMessageDialog(null, "Utilisateur supprimé avec succès !");
 
-	    } catch (SQLException e) {
+	    } 
+	    
+	    catch (SQLException e) {
 	        e.printStackTrace();
-	        JOptionPane.showMessageDialog(null, "Erreur lors de la suppression : " + e.getMessage(),
-	            "Erreur", JOptionPane.ERROR_MESSAGE);
-	        try {
-	            ConnexionDB.getConnection().rollback();
-	        } catch (SQLException ex) {
-	            ex.printStackTrace();
-	        }
-	    } finally {
-	        try {
-	            ConnexionDB.getConnection().setAutoCommit(true);
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
+	        JOptionPane.showMessageDialog(null, "Erreur lors de la suppression : " + e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
 	    }
 	}
 
