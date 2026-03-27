@@ -11,6 +11,9 @@ import BDD.ConnexionDB;
 import POJO.Region;
 import POJO.Role;
 
+/**
+ * DAO des Régions
+ */
 public class RegionDAO extends DAO<Region> {
 
 	public RegionDAO() {

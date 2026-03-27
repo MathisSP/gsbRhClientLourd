@@ -3,6 +3,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * Fichier permettant d'accèder à la base de données pour l'application
+ */
 public class ConnexionDB {
     private static final String URL      = "jdbc:mysql://localhost:3306/gsbfrais-2025-ap?useSSL=false";
     private static final String USER     = "myroot";

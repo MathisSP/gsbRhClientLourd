@@ -14,6 +14,9 @@ import POJO.Region;
 import POJO.Role;
 import POJO.Utilisateur;
 
+/**
+ * DAO des Utilisateurs
+ */
 public class UtilisateurDAO extends DAO<Utilisateur> {
 
 	public UtilisateurDAO() {

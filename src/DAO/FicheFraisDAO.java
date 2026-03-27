@@ -8,7 +8,9 @@ import java.util.List;
 
 import BDD.ConnexionDB;
 import POJO.FicheFrais;
-
+/**
+ * DAO des fiches de frais
+ */
 public class FicheFraisDAO extends DAO<FicheFrais> {
 
 	public FicheFraisDAO() {
@@ -39,6 +41,8 @@ public class FicheFraisDAO extends DAO<FicheFrais> {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	
 	public static List<String> selectAllFiche() {
 
 	    List<String> listFiche = new ArrayList<>();

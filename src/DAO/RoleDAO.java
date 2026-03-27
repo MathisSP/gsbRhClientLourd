@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import POJO.Role;
 import BDD.ConnexionDB;
 
+/**
+ * DAO des Roles
+ */
 public class RoleDAO extends DAO<Role> {
 
 	public RoleDAO() {

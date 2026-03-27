@@ -2,6 +2,9 @@ package DAO;
 
 import java.sql.Connection;
 
+/**
+ * DAO de base (sert d'exemple)
+ */
 public abstract class DAO<T> {
 	protected Connection connect = null;
 	
