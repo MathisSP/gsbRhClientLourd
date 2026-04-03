@@ -1,7 +1,5 @@
 package VUES;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 
 import BDD.ConnexionDB;
@@ -18,12 +16,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
+/**
+ * Fenêtre permettant de se connecter à l'application.
+ */
 public class Login extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JTextField tfLogin;
 	private JTextField tfPassword;
 
+	/**
+	 * Récupère le rôle de l'utilisateur depuis la base de données selon ses identifiants.
+	 * @param username le login saisi par l'utilisateur
+	 * @param password le mot de passe saisi par l'utilisateur
+	 * @return {@code String} le rôle de l'utilisateur, ou null si les identifiants sont incorrects
+	 */
 	private String getRole(String username, String password) {
 	    String sql = "SELECT idRole FROM utilisateur WHERE login = ? AND mdp = ?";
 
@@ -42,43 +49,38 @@ public class Login extends JFrame {
 	    }
 	    return null;
 	}
-	
+
 	/**
-	 * Create the frame.
+	 * Crée la fenêtre de connexion à l'application.
 	 */
 	public Login() {
 		getContentPane().setLayout(null);
-		
+
 		setTitle("GSB - Connexion");
 		setSize(500, 400);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		// texte à gauche (label) pour indiquer le login
+
 		JLabel lblLogin = new JLabel("Login :");
 		lblLogin.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		lblLogin.setBounds(109, 115, 82, 36);
 		getContentPane().add(lblLogin);
-		
-		// zone de texte du login
+
 		tfLogin = new JTextField();
 		tfLogin.setBounds(217, 115, 150, 36);
 		getContentPane().add(tfLogin);
 		tfLogin.setColumns(10);
-		
-		// texte à gauche (label) pour indiquer le mot de passe
+
 		JLabel lblPassword = new JLabel("Mot de passe : ");
 		lblPassword.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		lblPassword.setBounds(21, 184, 167, 36);
 		getContentPane().add(lblPassword);
-		
-		// zone de texte du mot de passe
+
 		tfPassword = new JTextField();
 		tfPassword.setColumns(10);
 		tfPassword.setBounds(217, 184, 150, 36);
 		getContentPane().add(tfPassword);
-		
-		// Bouton de connexion
+
 		JButton loginButton = new JButton("Connection");
 		loginButton.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
@@ -88,7 +90,7 @@ public class Login extends JFrame {
 		        String role = getRole(username, password);
 
 		        if (role != null) {
-		            Menu pageMenu = new Menu(role); // on passe le rôle au Menu
+		            Menu pageMenu = new Menu(role);
 		            pageMenu.setVisible(true);
 		            dispose();
 		        } else {
@@ -96,7 +98,7 @@ public class Login extends JFrame {
 		        }
 		    }
 		});
-		
+
 		loginButton.setBounds(250, 276, 89, 23);
 		getContentPane().add(loginButton);
 	}

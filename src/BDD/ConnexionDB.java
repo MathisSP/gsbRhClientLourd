@@ -4,7 +4,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * Fichier permettant d'accèder à la base de données pour l'application
+ * Classe utilitaire permettant d'accéder à la base de données pour l'application.
+ * Non instanciable, utiliser uniquement les méthodes statiques.
  */
 public class ConnexionDB {
     private static final String URL      = "jdbc:mysql://localhost:3306/gsbfrais-2025-ap?useSSL=false";
@@ -13,10 +14,18 @@ public class ConnexionDB {
     
     private static Connection instance = null;
 
-    // Constructeur privé = personne ne peut faire "new ConnexionDB()"
-    private ConnexionDB() {}
+    /**
+     * Constructeur privé - empêche l'instanciation de la classe.
+     */
+    private ConnexionDB() {
+        // Classe utilitaire, ne pas instancier
+    }
 
-    // Retourne toujours la même connexion
+    /**
+     * Retourne la connexion à la base de données.
+     * Si la connexion n'existe pas ou est fermée, elle est recréée.
+     * @return {@code Connection} la connexion active à la base de données
+     */
     public static Connection getConnection() {
         try {
             if (instance == null || instance.isClosed()) {
@@ -29,7 +38,9 @@ public class ConnexionDB {
         return instance;
     }
 
-    // Fermeture de la connexion
+    /**
+     * Ferme la connexion à la base de données si elle est ouverte.
+     */
     public static void close() {
         try {
             if (instance != null && !instance.isClosed()) {

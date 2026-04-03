@@ -15,6 +15,9 @@ import POJO.Utilisateur;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/**
+ * Fenêtre permettant de créer ou modifier les informations d'un visiteur.
+ */
 public class informationVisiteur extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -42,10 +45,11 @@ public class informationVisiteur extends JFrame {
 	private JTextField textAdresse;
 	private JTextField textLogin;
 	private Utilisateur utilisateurEnCours;
-	private String role; // ajouter cet attribut
+	private String role;
 
 	/**
-	 * Launch the application.
+	 * Point d'entrée principal de l'application, lance la fenêtre.
+	 * @param args arguments de la ligne de commande
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -61,9 +65,11 @@ public class informationVisiteur extends JFrame {
 	}
 
 	/**
-	 * Create the frame.
+	 * Crée la fenêtre de création ou modification d'un visiteur.
+	 * @param u l'utilisateur à modifier, ou null pour une création
+	 * @param role le rôle de l'utilisateur connecté
 	 */
-	public informationVisiteur(Utilisateur u,String role) {
+	public informationVisiteur(Utilisateur u, String role) {
 	    this.utilisateurEnCours = u;
 	    this.role = role;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -106,7 +112,6 @@ public class informationVisiteur extends JFrame {
 		btnRetour.setBounds(254, 227, 89, 23);
 		contentPane.add(btnRetour);
 
-		// Si u n'est pas null, on est en modification
 		if (u != null) {
 		    getLabelCreerVisteur().setText("Modification Visiteur");
 		    getIdAsaisir().setText(u.getIdUtilisateur());
@@ -121,16 +126,18 @@ public class informationVisiteur extends JFrame {
 		    getTextdateEmbauche().setText(u.getDateEmbauche().toString());
 		    getTextidRole().setText(u.getIdRole().getIdRole());
 		} else {
-		    // Mode création
 		    getTextidRole().setText("v");
-		    getTextidRole().setEditable(false); // rôle v de base
-
+		    getTextidRole().setEditable(false);
 		    String dateAujourdhui = java.time.LocalDate.now().toString();
 		    getTextdateEmbauche().setText(dateAujourdhui);
 		    getTextdateEmbauche().setEditable(false);
 		}
 	}
 
+	/**
+	 * Retourne le label du titre de la fenêtre.
+	 * @return {@code JLabel} le label titre
+	 */
 	public JLabel getLabelCreerVisteur() {
 		if (labelCreerVisteur == null) {
 			labelCreerVisteur = new JLabel("Création Visiteur");
@@ -138,6 +145,11 @@ public class informationVisiteur extends JFrame {
 		}
 		return labelCreerVisteur;
 	}
+
+	/**
+	 * Retourne le label de l'identifiant utilisateur.
+	 * @return {@code JLabel} le label id
+	 */
 	public JLabel getLabeIid() {
 		if (labeIid == null) {
 			labeIid = new JLabel("idUtilisateur: ");
@@ -145,6 +157,11 @@ public class informationVisiteur extends JFrame {
 		}
 		return labeIid;
 	}
+
+	/**
+	 * Retourne le champ de saisie de l'identifiant utilisateur.
+	 * @return {@code JTextField} le champ id
+	 */
 	public JTextField getIdAsaisir() {
 		if (idAsaisir == null) {
 			idAsaisir = new JTextField();
@@ -153,6 +170,11 @@ public class informationVisiteur extends JFrame {
 		}
 		return idAsaisir;
 	}
+
+	/**
+	 * Retourne le label du nom.
+	 * @return {@code JLabel} le label nom
+	 */
 	public JLabel getLblNom() {
 		if (lblNom == null) {
 			lblNom = new JLabel("nom: ");
@@ -160,6 +182,11 @@ public class informationVisiteur extends JFrame {
 		}
 		return lblNom;
 	}
+
+	/**
+	 * Retourne le champ de saisie du nom.
+	 * @return {@code JTextField} le champ nom
+	 */
 	public JTextField getTextNom() {
 		if (textNom == null) {
 			textNom = new JTextField();
@@ -168,6 +195,11 @@ public class informationVisiteur extends JFrame {
 		}
 		return textNom;
 	}
+
+	/**
+	 * Retourne le label du prénom.
+	 * @return {@code JLabel} le label prénom
+	 */
 	public JLabel getLblPrnom() {
 		if (lblPrnom == null) {
 			lblPrnom = new JLabel("Prenom: ");
@@ -175,6 +207,11 @@ public class informationVisiteur extends JFrame {
 		}
 		return lblPrnom;
 	}
+
+	/**
+	 * Retourne le champ de saisie du prénom.
+	 * @return {@code JTextField} le champ prénom
+	 */
 	public JTextField getTextPrenom() {
 		if (textPrenom == null) {
 			textPrenom = new JTextField();
@@ -183,6 +220,11 @@ public class informationVisiteur extends JFrame {
 		}
 		return textPrenom;
 	}
+
+	/**
+	 * Retourne le label du login.
+	 * @return {@code JLabel} le label login
+	 */
 	public JLabel getLblLogin() {
 		if (lblLogin == null) {
 			lblLogin = new JLabel("Login: ");
@@ -190,6 +232,11 @@ public class informationVisiteur extends JFrame {
 		}
 		return lblLogin;
 	}
+
+	/**
+	 * Retourne le label du mot de passe.
+	 * @return {@code JLabel} le label mot de passe
+	 */
 	public JLabel getLblMdp() {
 		if (lblMdp == null) {
 			lblMdp = new JLabel("Mdp: ");
@@ -197,6 +244,11 @@ public class informationVisiteur extends JFrame {
 		}
 		return lblMdp;
 	}
+
+	/**
+	 * Retourne le label de l'adresse.
+	 * @return {@code JLabel} le label adresse
+	 */
 	public JLabel getLblAdresse() {
 		if (lblAdresse == null) {
 			lblAdresse = new JLabel("Adresse: ");
@@ -204,6 +256,11 @@ public class informationVisiteur extends JFrame {
 		}
 		return lblAdresse;
 	}
+
+	/**
+	 * Retourne le label du code postal.
+	 * @return {@code JLabel} le label code postal
+	 */
 	public JLabel getLblCp() {
 		if (lblCp == null) {
 			lblCp = new JLabel("Cp: ");
@@ -211,6 +268,11 @@ public class informationVisiteur extends JFrame {
 		}
 		return lblCp;
 	}
+
+	/**
+	 * Retourne le label de la date d'embauche.
+	 * @return {@code JLabel} le label date d'embauche
+	 */
 	public JLabel getLblDateembauche() {
 		if (lblDateembauche == null) {
 			lblDateembauche = new JLabel("dateEmbauche: ");
@@ -218,6 +280,11 @@ public class informationVisiteur extends JFrame {
 		}
 		return lblDateembauche;
 	}
+
+	/**
+	 * Retourne le label du rôle.
+	 * @return {@code JLabel} le label rôle
+	 */
 	public JLabel getLblIdrole() {
 		if (lblIdrole == null) {
 			lblIdrole = new JLabel("idRole: ");
@@ -225,6 +292,11 @@ public class informationVisiteur extends JFrame {
 		}
 		return lblIdrole;
 	}
+
+	/**
+	 * Retourne le label de la ville.
+	 * @return {@code JLabel} le label ville
+	 */
 	public JLabel getLblVille() {
 		if (lblVille == null) {
 			lblVille = new JLabel("Ville: ");
@@ -232,12 +304,16 @@ public class informationVisiteur extends JFrame {
 		}
 		return lblVille;
 	}
+
+	/**
+	 * Retourne le bouton de validation de la création ou modification du visiteur.
+	 * @return {@code JButton} le bouton valider
+	 */
 	public JButton getBtnValiderCreationVisiteur() {
 	    if (btnValiderCreationVisiteur == null) {
 	        btnValiderCreationVisiteur = new JButton("Valider");
 	        btnValiderCreationVisiteur.addActionListener(new ActionListener() {
 	            public void actionPerformed(ActionEvent e) {
-	                // Récupère les valeurs des champs
 	                String id = getIdAsaisir().getText();
 	                String nom = getTextNom().getText();
 	                String prenom = getTextPrenom().getText();
@@ -249,14 +325,11 @@ public class informationVisiteur extends JFrame {
 	                String idRole = getTextidRole().getText();
 
 	                if (utilisateurEnCours != null) {
-	                    // Mode modification → UPDATE en base
 	                    UtilisateurDAO.updateUtilisateur(id, nom, prenom, login, mdp, adresse, cp, ville, idRole);
 	                } else {
-	                    // Mode création → INSERT en base
-	                    // UtilisateurDAO.createUtilisateur(id, nom, prenom, login, mdp, adresse, cp, ville, idRole);
+	                    UtilisateurDAO.createUtilisateur(id, nom, prenom, login, mdp, adresse, cp, ville, idRole);
 	                }
 
-	                // Retour à la liste
 	                listeVisiteurs liste = new listeVisiteurs(role);
 	                liste.setVisible(true);
 	                dispose();
@@ -266,6 +339,11 @@ public class informationVisiteur extends JFrame {
 	    }
 	    return btnValiderCreationVisiteur;
 	}
+
+	/**
+	 * Retourne le champ de saisie du mot de passe.
+	 * @return {@code JTextField} le champ mot de passe
+	 */
 	public JTextField getTextMdp() {
 		if (textMdp == null) {
 			textMdp = new JTextField();
@@ -274,6 +352,11 @@ public class informationVisiteur extends JFrame {
 		}
 		return textMdp;
 	}
+
+	/**
+	 * Retourne le champ de saisie du code postal.
+	 * @return {@code JTextField} le champ code postal
+	 */
 	public JTextField getTextCp() {
 		if (textCp == null) {
 			textCp = new JTextField();
@@ -282,6 +365,11 @@ public class informationVisiteur extends JFrame {
 		}
 		return textCp;
 	}
+
+	/**
+	 * Retourne le champ de saisie de la date d'embauche.
+	 * @return {@code JTextField} le champ date d'embauche
+	 */
 	public JTextField getTextdateEmbauche() {
 		if (textdateEmbauche == null) {
 			textdateEmbauche = new JTextField();
@@ -290,6 +378,11 @@ public class informationVisiteur extends JFrame {
 		}
 		return textdateEmbauche;
 	}
+
+	/**
+	 * Retourne le champ de saisie de la ville.
+	 * @return {@code JTextField} le champ ville
+	 */
 	public JTextField getTextVille() {
 		if (textVille == null) {
 			textVille = new JTextField();
@@ -298,6 +391,11 @@ public class informationVisiteur extends JFrame {
 		}
 		return textVille;
 	}
+
+	/**
+	 * Retourne le champ de saisie du rôle.
+	 * @return {@code JTextField} le champ rôle
+	 */
 	public JTextField getTextidRole() {
 		if (textidRole == null) {
 			textidRole = new JTextField();
@@ -306,6 +404,11 @@ public class informationVisiteur extends JFrame {
 		}
 		return textidRole;
 	}
+
+	/**
+	 * Retourne le champ de saisie de l'adresse.
+	 * @return {@code JTextField} le champ adresse
+	 */
 	public JTextField getTextAdresse() {
 		if (textAdresse == null) {
 			textAdresse = new JTextField();
@@ -314,6 +417,11 @@ public class informationVisiteur extends JFrame {
 		}
 		return textAdresse;
 	}
+
+	/**
+	 * Retourne le champ de saisie du login.
+	 * @return {@code JTextField} le champ login
+	 */
 	public JTextField getTextLogin() {
 		if (textLogin == null) {
 			textLogin = new JTextField();

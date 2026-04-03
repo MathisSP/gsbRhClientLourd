@@ -6,6 +6,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.Font;
 
+/**
+* Fenêtre de test.
+*/
 public class PageTest extends JFrame {
 
 	private static final long serialVersionUID = 1L;

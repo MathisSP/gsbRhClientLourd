@@ -1,4 +1,3 @@
-
 package VUES;
 
 import java.awt.EventQueue;
@@ -9,7 +8,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -27,6 +25,9 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * Fenêtre affichant la liste de tous les utilisateurs de la base de données.
+ */
 public class listeVisiteurs extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -35,13 +36,14 @@ public class listeVisiteurs extends JFrame {
 	private JButton btnModification;
 	private JButton btnSupprimer;
 	private JTable tableVisiteurs;
-	private ArrayList<Utilisateur> utilisateurs; // ajout ici
+	private ArrayList<Utilisateur> utilisateurs;
 	private JButton btnRetour;
-	private String role; // ajouter cet attribut
+	private String role;
 	private JTextField tfRechercheVisiteurs;
 
 	/**
-	 * Launch the application.
+	 * Point d'entrée principal de l'application, lance la fenêtre.
+	 * @param args arguments de la ligne de commande
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -57,7 +59,8 @@ public class listeVisiteurs extends JFrame {
 	}
 
 	/**
-	 * Create the frame.
+	 * Crée la fenêtre de liste des visiteurs.
+	 * @param role le rôle de l'utilisateur connecté
 	 */
 	public listeVisiteurs(String role) {
 		this.role = role;
@@ -71,50 +74,41 @@ public class listeVisiteurs extends JFrame {
 	    contentPane.add(getBtnModification());
 	    contentPane.add(getBtnSupprimer());
 
-	    // Label Visiteurs en haut de la page
 	    JLabel labelVisiteurs = new JLabel("Visiteurs");
 	    labelVisiteurs.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		labelVisiteurs.setBounds(201, 24, 114, 34);
 		contentPane.add(labelVisiteurs);
 		
-		// Colonnes du tableau utiliser
 		String[] colonnes = {"ID", "Nom", "Prénom", "Login", "Ville", "Rôle"};
 
-		// Récupération des utilisateurs par le DAO
 		utilisateurs = UtilisateurDAO.findAllUtilisateur();
 
-		// tableau en empechant la modification des cellules
 		DefaultTableModel tableVisiteursModel = new DefaultTableModel(colonnes, 0) {
 		    public boolean isCellEditable(int row, int column) {
 		        return false;
 		    }
 		};
 
-		// Remplissage du tableau avec les visiteurs
 		for (Utilisateur u : utilisateurs) {
 			tableVisiteursModel.addRow(new String[]{u.getIdUtilisateur(),u.getNom(),u.getPrenom(),u.getLogin(),u.getVille(),u.getIdRole().getLibelleRole()});
 		}
-
 		tableVisiteurs = new JTable(tableVisiteursModel);
 		tableVisiteurs.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
+		
 		JScrollPane scrollPane = new JScrollPane(tableVisiteurs);
 		scrollPane.setBounds(50, 69, 410, 229);
 		contentPane.add(scrollPane);
 		contentPane.add(getBtnRetour());
 
-		// Label recherche
 		JLabel lblRechercheVisiteurs = new JLabel("Rechercher : ");
 		lblRechercheVisiteurs.setBounds(50, 16, 85, 14);
 		contentPane.add(lblRechercheVisiteurs);
 
-		// Champ de recherche avec filtrage en temps réel
 		tfRechercheVisiteurs = new JTextField();
 		tfRechercheVisiteurs.setBounds(49, 38, 139, 20);
 		tfRechercheVisiteurs.setColumns(10);
 		contentPane.add(tfRechercheVisiteurs);
 
-		// Modification du tableau pour afficher seulement ce qui correspond à la recherche de la barre de recherche
 		tfRechercheVisiteurs.getDocument().addDocumentListener(new DocumentListener() {
 		    public void insertUpdate(DocumentEvent e)  { filtrer(); }
 		    public void removeUpdate(DocumentEvent e)  { filtrer(); }
@@ -122,20 +116,23 @@ public class listeVisiteurs extends JFrame {
 
 		    private void filtrer() {
 		        String recherche = tfRechercheVisiteurs.getText().toLowerCase().trim();
-		        tableVisiteursModel.setRowCount(0); // Vider le tableau
+		        tableVisiteursModel.setRowCount(0);
 
 		        for (Utilisateur u : utilisateurs) {
-		        	// recherche dans chaque colonne si ce qui a été écrit dans la barre de recherche existe aussi dans le tableau
 		            if (u.getIdUtilisateur().toLowerCase().contains(recherche)|| u.getNom().toLowerCase().contains(recherche)|| u.getPrenom().toLowerCase().contains(recherche)|| u.getLogin().toLowerCase().contains(recherche)|| u.getVille().toLowerCase().contains(recherche)|| u.getIdRole().getLibelleRole().toLowerCase().contains(recherche)) 
 		            {
-		            	// ajouter la ligne à la recherche faite
 		            	tableVisiteursModel.addRow(new String[]{u.getIdUtilisateur(),u.getNom(),u.getPrenom(),u.getLogin(),u.getVille(),u.getIdRole().getLibelleRole()});
 		            }
 		        }
 		    }
 		});
 	}
-	
+
+	/**
+	 * Retourne l'utilisateur sélectionné dans le tableau.
+	 * Affiche un message d'avertissement si aucune ligne n'est sélectionnée.
+	 * @return {@code Utilisateur} l'utilisateur sélectionné, ou null si aucun
+	 */
 	private Utilisateur getUtilisateurSelectionne() {
 	    int ligneSelectionnee = tableVisiteurs.getSelectedRow();
 	    if (ligneSelectionnee == -1) {
@@ -143,9 +140,7 @@ public class listeVisiteurs extends JFrame {
 	            "Attention", JOptionPane.WARNING_MESSAGE);
 	        return null;
 	    }
-	    // Récupérer l'ID affiché dans la ligne sélectionnée
 	    String idSelectionne = (String) tableVisiteurs.getValueAt(ligneSelectionnee, 0);
-	    // Retrouver l'utilisateur correspondant dans la liste complète
 	    for (Utilisateur u : utilisateurs) {
 	        if (u.getIdUtilisateur().equals(idSelectionne)) {
 	            return u;
@@ -153,7 +148,11 @@ public class listeVisiteurs extends JFrame {
 	    }
 	    return null;
 	}
-	
+
+	/**
+	 * Retourne le bouton de création d'un nouveau visiteur.
+	 * @return {@code JButton} le bouton créer
+	 */
 	public JButton getBtnCreationVisiteur() {
 		if (btnCreationVisiteur == null) {
 			btnCreationVisiteur = new JButton("Créer");
@@ -168,6 +167,11 @@ public class listeVisiteurs extends JFrame {
 		}
 		return btnCreationVisiteur;
 	}
+
+	/**
+	 * Retourne le bouton de modification du visiteur sélectionné.
+	 * @return {@code JButton} le bouton modifier
+	 */
 	public JButton getBtnModification() {
 	    if (btnModification == null) {
 	        btnModification = new JButton("Modifier");
@@ -186,6 +190,10 @@ public class listeVisiteurs extends JFrame {
 	    return btnModification;
 	}
 
+	/**
+	 * Retourne le bouton de suppression du visiteur sélectionné.
+	 * @return {@code JButton} le bouton supprimer
+	 */
 	public JButton getBtnSupprimer() {
 	    if (btnSupprimer == null) {
 	        btnSupprimer = new JButton("Supprimer");
@@ -197,9 +205,7 @@ public class listeVisiteurs extends JFrame {
 	                        "Supprimer " + u.getNom() + " " + u.getPrenom() + " ?", 
 	                        "Confirmation", JOptionPane.YES_NO_OPTION);
 	                    if (confirmation == JOptionPane.YES_OPTION) {
-	                        UtilisateurDAO.deleteUtilisateurComplete(u.getIdUtilisateur()); // appel DAO
-	                        
-	                        // Rafraîchir la page
+	                        UtilisateurDAO.deleteUtilisateurComplete(u.getIdUtilisateur());
 	                        listeVisiteurs nouvelleListe = new listeVisiteurs(role);
 	                        nouvelleListe.setVisible(true);
 	                        dispose();
@@ -211,13 +217,17 @@ public class listeVisiteurs extends JFrame {
 	    }
 	    return btnSupprimer;
 	}
-	
+
+	/**
+	 * Retourne le bouton de retour vers le menu principal.
+	 * @return {@code JButton} le bouton retour
+	 */
 	private JButton getBtnRetour() {
 	    if (btnRetour == null) {
 	        btnRetour = new JButton("X");
 	        btnRetour.addActionListener(new ActionListener() {
 	            public void actionPerformed(ActionEvent e) {
-	                Menu reMenu = new Menu(role); // role est maintenant connu
+	                Menu reMenu = new Menu(role);
 	                reMenu.setVisible(true);
 	                dispose();
 	            }

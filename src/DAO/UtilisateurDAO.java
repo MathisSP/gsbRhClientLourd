@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,29 +20,100 @@ import POJO.Utilisateur;
  */
 public class UtilisateurDAO extends DAO<Utilisateur> {
 
+	/**
+	 * Instanciation du DAO
+	 */
 	public UtilisateurDAO() {
 		super(null);
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * Méthode pour créer un utilisateur (non utiliser car faite dans une autre méthode)
+	 * @param obj prend un objet Utilisateur comme données
+	 * @return boolean vrai ou faux si la création de l'utilisateur a bien été faite
+	 */
 	@Override
 	public boolean create(Utilisateur obj) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	/**
+	* Méthode pour effacer un Utilisateur (non utiliser car faite dans une autre méthode)
+	* @param obj prend un objet Utilisateur comme données
+	* @return boolean vrai ou faux si la suppression de l'utilisateur a bien été faite
+	*/
 	@Override
 	public boolean delete(Utilisateur obj) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 	
+	/**
+	* Méthode de mise à jour d'un Utilisateur (non utiliser car faite dans une autre méthode)
+	* @param obj prend un objet Utilisateur comme données
+	* @return boolean vrai ou faux si la mise a jour de l'utilisateur a bien été faite
+	*/
 	@Override
 	public boolean update(Utilisateur obj) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 	
+	/**
+	* Méthode de recherche des informations d'un Utilisateur (non utiliser car faite dans une autre méthode mais obligatoire car dans DAO)
+	* @param idUtilisateur un id d'un role
+	* @return Utilisateur un objet Utilisateur contenant les informations de la région
+	*/
+	@Override
+	public Utilisateur find(int idUtilisateur) {
+		// TODO Auto-generated method stub
+		
+		return null;
+	}
+	
+	/**
+	 * Méthode de création d'un Utilisateur
+	 * @param id id du nouvel utilisateur
+	 * @param nom nom du nouvel utilisateur
+	 * @param prenom prenom du nouvel utilisateur
+	 * @param login login du nouvel utilisateur
+	 * @param mdp mot de passe du nouvel utilisateur
+	 * @param adresse adresse du nouvel utilisateur
+	 * @param cp code postal du nouvel utilisateur
+	 * @param ville ville du nouvel utilisateur
+	 * @param idRole rôle du nouvel utilisateur
+	 */
+	public static void createUtilisateur(String id, String nom, String prenom, String login,
+	        String mdp, String adresse, String cp, String ville, String idRole) {
+	    String requeteSql = "INSERT INTO utilisateur (idUtilisateur, nom, prenom, login, mdp, adresse, cp, ville, dateEmbauche, idRole) " +
+	                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURDATE(), ?)";
+	    try {
+	        Connection conn = ConnexionDB.getConnection();
+	        PreparedStatement stmt = conn.prepareStatement(requeteSql);
+	        stmt.setString(1, id);
+	        stmt.setString(2, nom);
+	        stmt.setString(3, prenom);
+	        stmt.setString(4, login);
+	        stmt.setString(5, mdp);
+	        stmt.setString(6, adresse);
+	        stmt.setString(7, cp);
+	        stmt.setString(8, ville);
+	        stmt.setString(9, idRole);
+	        stmt.executeUpdate();
+	        JOptionPane.showMessageDialog(null, "Utilisateur créé avec succès !");
+	    } catch (SQLException e) {
+	        JOptionPane.showMessageDialog(null, "Erreur lors de la création : " + e.getMessage(),
+	            "Erreur", JOptionPane.ERROR_MESSAGE);
+	        e.printStackTrace();
+	    }
+	}
+	
+	/**
+	* Méthode de suppression complète d'un utilisateur seulement si toutes ses fiches de frais sont rembourser
+	* @param idUtilisateur un id d'un role
+	*/
 	public static void deleteUtilisateurComplete(String idUtilisateur) {
 	    try {
 	        Connection conn = ConnexionDB.getConnection();
@@ -100,9 +172,20 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 	        JOptionPane.showMessageDialog(null, "Erreur lors de la suppression : " + e.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
 	    }
 	}
-
-	public static void updateUtilisateur(String id, String nom, String prenom, String login, 
-            String mdp, String adresse, String cp, String ville, String idRole) {
+	
+	/**
+	 * Méthode de mise à jour des informations d'un Utilisateur
+	 * @param id id de l'utilisateur
+	 * @param nom nouveau nom de l'utilisateur
+	 * @param prenom nouveau prenom de l'utilisateur
+	 * @param login nouveau login de l'utilisateur
+	 * @param mdp nouveau mot de passe de l'utilisateur
+	 * @param adresse nouvelle adresse de l'utilisateur
+	 * @param cp nouveau codePostal de l'utilisateur
+	 * @param ville nouvelle ville de l'utilisateur
+	 * @param idRole idRole de l'utilisateur
+	 */
+	public static void updateUtilisateur(String id, String nom, String prenom, String login, String mdp, String adresse, String cp, String ville, String idRole) {
 		String requeteSql = "UPDATE utilisateur SET nom=?, prenom=?, login=?, mdp=?, adresse=?, cp=?, ville=?, idRole=? WHERE idUtilisateur=?";
 		try {
 			Connection conn = ConnexionDB.getConnection();
@@ -122,15 +205,57 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	* Méthode de recherche des informations d'un utilisateur
+	* @param idUtilisateur un id d'un idUtilisateur
+	* @return Utilisateur un objet Role contenant les informations de l'utilisateur
+	*/
+	public static Utilisateur findUtilisateur(String idUtilisateur) {
+		Connection con = ConnexionDB.getConnection();
 
-	@Override
-	public Utilisateur find(int id) {
-		// TODO Auto-generated method stub
-		
+	    String sql = "SELECT * FROM utilisateur WHERE idUtilisateur = '" + idUtilisateur + "'";
+	    try {
+	        PreparedStatement stmt = con.prepareStatement(sql);
+	        stmt.setString(1, idUtilisateur);
+	        ResultSet result = stmt.executeQuery();
+
+	        if (result.next()) {
+	            Role role = new Role(
+	                result.getString("idRole"),
+	                result.getString("libelleRole")
+	            );
+	            Region region = new Region(
+	                result.getInt("idRegion"),
+	                result.getString("libelleRegion")
+	            );
+	            return new Utilisateur(
+	                result.getString("idUtilisateur"),
+	                result.getString("nom"),
+	                result.getString("prenom"),
+	                result.getString("login"),
+	                result.getString("mdp"),
+	                result.getString("adresse"),
+	                result.getString("cp"),
+	                result.getString("ville"),
+	                result.getDate("dateEmbauche"),
+	                role,
+	                result.getDate("date_modif_mdp"),
+	                region
+	            );
+	        }
+	    } catch (SQLException e) {                                      
+	        System.out.println("Il n'y a aucun Utilisateur avec l'id " + idUtilisateur);
+	        e.printStackTrace(); // affiche l'erreur précise dans la console
+	    }
 		return null;
 	}
-
-
+	
+	/**
+	* Méthode de recherche des informations de tout les utilisateurs
+	* 
+	* @return {@code ArrayList<Utilisateur>} Une liste de tout les utilisateurs
+	*/
 	public static ArrayList<Utilisateur> findAllUtilisateur() {
 	    ArrayList<Utilisateur> liste = new ArrayList<>();
 
@@ -180,5 +305,6 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 
 	    return liste;
 	}
+	
 
 }
