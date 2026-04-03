@@ -156,7 +156,7 @@ public class consulterFicheVisiteurs extends JFrame {
 	            public void actionPerformed(ActionEvent e) {
 	                Utilisateur u = getUtilisateurSelectionne();
 	                if (u != null) {
-	                    informationVisiteur modif = new informationVisiteur(u, role);
+	                    consulterFicheVisiteurs modif = new consulterFicheVisiteurs(u, role);
 	                    modif.setVisible(true);
 	                    dispose();
 	                }
