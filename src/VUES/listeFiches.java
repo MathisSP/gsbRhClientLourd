@@ -29,6 +29,7 @@ public class listeFiches extends JFrame {
     private JTable tableFiches;
     private ArrayList<FicheFrais> fichesfrais;
     private String role;
+    private String idVisiteur;
 
     /**
      * Point d'entrée principal de l'application, lance la fenêtre.
@@ -47,11 +48,23 @@ public class listeFiches extends JFrame {
     }
 
     /**
-     * Crée la fenêtre de liste des fiches de frais.
+     * Crée la fenêtre de liste des fiches de frais (toutes les fiches).
      * @param role le rôle de l'utilisateur connecté
      */
     public listeFiches(String role) {
+        this(role, null); // Appelle le constructeur principal avec null
+    }
+
+    /**
+     * Crée la fenêtre de liste des fiches de frais pour un visiteur spécifique.
+     * @param role le rôle de l'utilisateur connecté
+     * @param idVisiteur l'ID du visiteur dont on veut voir les fiches de frais
+     * @wbp.parser.constructor
+     */
+    public listeFiches(String role, String idVisiteur) {
         this.role = role;
+        this.idVisiteur = idVisiteur;
+        
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 534, 386);
         contentPane = new JPanel();
@@ -65,7 +78,11 @@ public class listeFiches extends JFrame {
         contentPane.add(labelFiches);
 
         String[] colonnes = {"ID", "Année", "Mois"};
-        fichesfrais = FicheFraisDAO.selectAllFiche();
+        
+        if (idVisiteur != null) {
+            // Récupérer uniquement les fiches du visiteur sélectionné
+            fichesfrais = FicheFraisDAO.selectFicheByIdUtilisateur(idVisiteur);
+        }
 
         DefaultTableModel tableFichesModel = new DefaultTableModel(colonnes, 0) {
             public boolean isCellEditable(int row, int column) { return false; }
@@ -100,7 +117,7 @@ public class listeFiches extends JFrame {
         JButton btnRetour = new JButton("X");
         btnRetour.setBounds(485, 7, 23, 20);
         btnRetour.addActionListener(e -> {
-            Menu reMenu = new Menu(role);
+            consulterFicheVisiteurs reMenu = new consulterFicheVisiteurs(role);
             reMenu.setVisible(true);
             dispose();
         });
@@ -115,13 +132,18 @@ public class listeFiches extends JFrame {
     private FicheFrais getFicheSelectionnee() {
         int ligneSelectionnee = tableFiches.getSelectedRow();
         if (ligneSelectionnee == -1) {
-            JOptionPane.showMessageDialog(null, "Veuillez sélectionner une fiche.",
-                "Attention", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Veuillez sélectionner une fiche.","Attention", JOptionPane.WARNING_MESSAGE);
             return null;
         }
+        
         int idSelectionne = Integer.parseInt((String) tableFiches.getValueAt(ligneSelectionnee, 0));
+        
         for (FicheFrais f : fichesfrais) {
             if (f.getIdFiche() == idSelectionne) {
+            	// va être utiliser pour afficher la fiche qu'on veut précisément
+            	informationFiche ficheChoisit = new informationFiche(role,idVisiteur,f.getIdFiche());
+            	ficheChoisit.setVisible(true);
+                dispose();
                 return f;
             }
         }

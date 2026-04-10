@@ -74,9 +74,9 @@ public class listeVisiteurs extends JFrame {
 	    contentPane.add(getBtnModification());
 	    contentPane.add(getBtnSupprimer());
 
-	    JLabel labelVisiteurs = new JLabel("Visiteurs");
+	    JLabel labelVisiteurs = new JLabel("Utilisateurs");
 	    labelVisiteurs.setFont(new Font("Tahoma", Font.PLAIN, 24));
-		labelVisiteurs.setBounds(201, 24, 114, 34);
+		labelVisiteurs.setBounds(201, 24, 152, 34);
 		contentPane.add(labelVisiteurs);
 		
 		String[] colonnes = {"ID", "Nom", "Prénom", "Login", "Ville", "Rôle"};

@@ -88,6 +88,7 @@ public class consulterFicheVisiteurs extends JFrame {
 		for (Utilisateur u : utilisateurs) {
 			tableVisiteursModel.addRow(new String[]{u.getIdUtilisateur(),u.getNom(),u.getPrenom(),u.getLogin(),u.getVille(),u.getIdRole().getLibelleRole()});
 		}
+		
 		tableVisiteurs = new JTable(tableVisiteursModel);
 		tableVisiteurs.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
@@ -131,14 +132,15 @@ public class consulterFicheVisiteurs extends JFrame {
 	 */
 	private Utilisateur getUtilisateurSelectionne() {
 	    int ligneSelectionnee = tableVisiteurs.getSelectedRow();
+	    
 	    if (ligneSelectionnee == -1) {
-	        JOptionPane.showMessageDialog(null, "Veuillez sélectionner un utilisateur.",
-	            "Attention", JOptionPane.WARNING_MESSAGE);
+	        JOptionPane.showMessageDialog(null, "Veuillez sélectionner un utilisateur.", "Attention", JOptionPane.WARNING_MESSAGE);
 	        return null;
 	    }
+	    
 	    String idSelectionne = (String) tableVisiteurs.getValueAt(ligneSelectionnee, 0);
 	    for (Utilisateur u : utilisateurs) {
-	        if (u.getIdUtilisateur().equals(idSelectionne)) {
+	        if (u.getIdUtilisateur() == idSelectionne) {
 	            return u;
 	        }
 	    }
@@ -151,18 +153,19 @@ public class consulterFicheVisiteurs extends JFrame {
 	 */
 	public JButton getBtnConsulter() {
 	    if (btnConsultation == null) {
-	    	btnConsultation = new JButton("Consulter ses fiches");
-	    	btnConsultation.addActionListener(new ActionListener() {
+	        btnConsultation = new JButton("Consulter ses fiches");
+	        btnConsultation.addActionListener(new ActionListener() {
 	            public void actionPerformed(ActionEvent e) {
 	                Utilisateur u = getUtilisateurSelectionne();
 	                if (u != null) {
-	                    consulterFicheVisiteurs modif = new consulterFicheVisiteurs(u, role);
-	                    modif.setVisible(true);
+	                    // Passer l'ID du visiteur à listeFiches
+	                    listeFiches fichesDuVisiteur = new listeFiches(role, u.getIdUtilisateur());
+	                    fichesDuVisiteur.setVisible(true);
 	                    dispose();
 	                }
 	            }
 	        });
-	    	btnConsultation.setBounds(171, 318, 144, 20);
+	        btnConsultation.setBounds(171, 318, 144, 20);
 	    }
 	    return btnConsultation;
 	}

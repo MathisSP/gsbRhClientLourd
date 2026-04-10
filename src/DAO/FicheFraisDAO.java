@@ -9,6 +9,8 @@ import java.util.List;
 
 import BDD.ConnexionDB;
 import POJO.FicheFrais;
+import POJO.LigneFraisForfait;
+import POJO.LigneFraisHorsForfait;
 import POJO.Region;
 import POJO.Role;
 import POJO.Utilisateur;
@@ -68,27 +70,18 @@ public class FicheFraisDAO extends DAO<FicheFrais> {
 	*/
 	@Override
 	public FicheFrais find(int idFicheFrais) {
-		// TODO Auto-generated method stub
-		Connection con = ConnexionDB.getConnection();
-
-	    String sql = "SELECT * FROM fichefrais WHERE idFiche = '" + idFicheFrais + "'";
+	    Connection con = ConnexionDB.getConnection();
+	    // Correction : suppression des apostrophes autour du ? 
+	    String sql = "SELECT * FROM fichefrais WHERE idFiche = ?";
 	    try {
 	        PreparedStatement stmt = con.prepareStatement(sql);
 	        stmt.setInt(1, idFicheFrais);
 	        ResultSet result = stmt.executeQuery();
 
 	        if (result.next()) {
-	            Role role = new Role(
-	                result.getString("idRole"),
-	                result.getString("libelleRole")
-	            );
-	            Region region = new Region(
-	                result.getInt("idRegion"),
-	                result.getString("libelleRegion")
-	            );
 	            return new FicheFrais(
 	                result.getInt("idFiche"),
-	                result.getString("idUtilisaateur"),
+	                result.getString("idUtilisateur"), // Correction : "idUtilisaateur" -> "idUtilisateur"
 	                result.getInt("annee"),
 	                result.getInt("mois"),
 	                result.getInt("nbJustificatifs"),
@@ -97,11 +90,13 @@ public class FicheFraisDAO extends DAO<FicheFrais> {
 	                result.getString("idEtat")
 	            );
 	        }
-	    } catch (SQLException e) {                                      
+	        result.close();
+	        stmt.close();
+	    } catch (SQLException e) {
 	        System.out.println("Il n'y a aucune fiche avec l'id " + idFicheFrais);
-	        e.printStackTrace(); // affiche l'erreur précise dans la console
+	        e.printStackTrace();
 	    }
-		return null;
+	    return null;
 	}
 	
 	
@@ -130,4 +125,99 @@ public class FicheFraisDAO extends DAO<FicheFrais> {
         }
         return listFiche;
     }
+	
+	/**
+	 * Récupère toutes les fiches de frais d'un visiteur spécifique.
+	 * @param idUtilisateur l'ID du visiteur
+	 * @return ArrayList<FicheFrais> liste des fiches du visiteur
+	 */
+	public static ArrayList<FicheFrais> selectFicheByIdUtilisateur(String idUtilisateur) {
+	    ArrayList<FicheFrais> fiches = new ArrayList<>();
+	    Connection conn = null;
+	    try {
+	        conn = ConnexionDB.getConnection();
+	        String requete = "SELECT * FROM fichefrais WHERE idUtilisateur = ?";
+	        PreparedStatement pst = conn.prepareStatement(requete);
+	        pst.setString(1, idUtilisateur);
+	        ResultSet rs = pst.executeQuery();
+	        
+	        while (rs.next()) {
+	            // Utiliser le constructeur complet de FicheFrais
+	            FicheFrais f = new FicheFrais(
+	                rs.getInt("idFiche"),
+	                rs.getString("idUtilisateur"),
+	                rs.getInt("annee"),
+	                rs.getInt("mois"),
+	                rs.getInt("nbJustificatifs"),
+	                rs.getFloat("montantValide"),
+	                rs.getDate("dateModif"),
+	                rs.getString("idEtat")
+	            );
+	            fiches.add(f);
+	        }
+	        rs.close();
+	        pst.close();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return fiches;
+	}
+	
+	/**
+	 * Récupère les lignes de frais forfaitaires d'une fiche.
+	 * @param idFiche l'identifiant de la fiche
+	 * @return ArrayList<LigneFraisForfait> les lignes forfaitaires de la fiche
+	 */
+	public static ArrayList<LigneFraisForfait> selectLignesForfaitByIdFiche(int idFiche) {
+	    ArrayList<LigneFraisForfait> lignes = new ArrayList<>();
+	    try {
+	        Connection conn = ConnexionDB.getConnection();
+	        String sql = "SELECT * FROM lignefraisforfait WHERE idFiche = ?";
+	        PreparedStatement pst = conn.prepareStatement(sql);
+	        pst.setInt(1, idFiche);
+	        ResultSet rs = pst.executeQuery();
+	        while (rs.next()) {
+	            lignes.add(new LigneFraisForfait(
+	                rs.getInt("idFiche"),
+	                rs.getString("idFraisForfait"),
+	                rs.getInt("quantite")
+	            ));
+	        }
+	        rs.close();
+	        pst.close();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return lignes;
+	}
+	
+	/**
+	 * Récupère les lignes de frais hors forfait d'une fiche.
+	 * @param idFiche l'identifiant de la fiche
+	 * @return ArrayList<LigneFraisHorsForfait> les lignes hors forfait de la fiche
+	 */
+	public static ArrayList<LigneFraisHorsForfait> selectLignesHorsForfaitByIdFiche(int idFiche) {
+	    ArrayList<LigneFraisHorsForfait> lignes = new ArrayList<>();
+	    try {
+	        Connection conn = ConnexionDB.getConnection();
+	        String sql = "SELECT * FROM lignefraishorsforfait WHERE idFiche = ?";
+	        PreparedStatement pst = conn.prepareStatement(sql);
+	        pst.setInt(1, idFiche);
+	        ResultSet rs = pst.executeQuery();
+	        while (rs.next()) {
+	            lignes.add(new LigneFraisHorsForfait(
+	                rs.getInt("idLigneFHF"),
+	                rs.getInt("idFiche"),
+	                rs.getString("libelle"),
+	                rs.getDate("dateFrais"),
+	                rs.getFloat("montant")
+	            ));
+	        }
+	        rs.close();
+	        pst.close();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return lignes;
+	}
 }

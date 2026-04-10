@@ -5,6 +5,8 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JLabel;
+import java.awt.Font;
 
 /**
  * Fenêtre permettant d'afficher le menu principal de l'application.
@@ -36,6 +38,19 @@ public class Menu extends JFrame {
 	 * @param role le rôle de l'utilisateur connecté (ex: "s", "d", "r")
 	 */
 	public Menu(String role) {
+		
+		JLabel lblSecretaire = new JLabel("Secrétaire");
+	    lblSecretaire.setFont(new Font("Tahoma", Font.PLAIN, 26));
+	    lblSecretaire.setBounds(250, 30, 270, 54);
+	    
+	    JLabel lblDirecteurRH = new JLabel("Directeur RH");
+	    lblDirecteurRH.setFont(new Font("Tahoma", Font.PLAIN, 26));
+	    lblDirecteurRH.setBounds(230, 30, 270, 54);
+	    
+	    JLabel lblResponsableFicheFrais = new JLabel("Responsable Fiche Frais");
+	    lblResponsableFicheFrais.setFont(new Font("Tahoma", Font.PLAIN, 26));
+	    lblResponsableFicheFrais.setBounds(190, 30, 280, 54);
+		
 	    JButton btnlistVisiteur = new JButton("Liste des visiteurs");
 	    btnlistVisiteur.setBounds(62, 155, 183, 54);
 	    btnlistVisiteur.setVisible(false);
@@ -93,13 +108,16 @@ public class Menu extends JFrame {
 	    if (role.equals("s")) {
 	    	btnlistVisiteur.setVisible(true);
 	  	    btnFicheVisiteur.setVisible(true);
+		    getContentPane().add(lblSecretaire);
 	    }
 	    if (role.equals("d")) {
 	    	btnFicheVisiteurDirecteur.setVisible(true);
+		    getContentPane().add(lblDirecteurRH);
 	    }
 	    if (role.equals("r")) {
 	    	btnStatVisiteur.setVisible(true);
 		    btnStatRegion.setVisible(true);
+		    getContentPane().add(lblResponsableFicheFrais);
 	    }
 
 	    setTitle("GSB - Accueil");
