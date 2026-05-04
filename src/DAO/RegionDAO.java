@@ -95,7 +95,7 @@ public class RegionDAO extends DAO<Region> {
 	/**
 	 * Méthode de recherche des informations de toutes les régions
 	 * 
-	 * @return {@code ArrayList<Region>} Une Liste de régions
+	 * @return Une Liste de régions
 	 */
 	public ArrayList<Region> findAllRegions() {
 		Connection con = ConnexionDB.getConnection();

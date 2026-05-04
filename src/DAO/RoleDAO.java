@@ -93,7 +93,7 @@ public class RoleDAO extends DAO<Role> {
 	/**
 	 * Méthode de recherche des informations de toutes les roles
 	 * 
-	 * @return {@code ArrayList<Role>} Une Liste de roles
+	 * @return Une Liste de roles
 	 */
 	public ArrayList<Role> findAllRoles() {
 		Connection con = ConnexionDB.getConnection();

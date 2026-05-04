@@ -35,7 +35,7 @@ public class Menu extends JFrame {
 
 	/**
 	 * Crée la fenêtre du menu principal et affiche les boutons selon le rôle.
-	 * @param role le rôle de l'utilisateur connecté (ex: "s", "d", "r")
+	 * @param role le rôle de l'utilisateur connecté (s / d / r)
 	 */
 	public Menu(String role) {
 		
@@ -81,7 +81,9 @@ public class Menu extends JFrame {
 	    btnFicheVisiteurDirecteur.setVisible(false);
 	    btnFicheVisiteurDirecteur.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-	            new PageTest().setVisible(true);
+	        	consulterFicheVisiteurs liste = new consulterFicheVisiteurs(role);
+	            liste.setVisible(true);
+	            dispose();
 	        }
 	    });
 	    getContentPane().add(btnFicheVisiteurDirecteur);
@@ -91,7 +93,9 @@ public class Menu extends JFrame {
 	    btnStatVisiteur.setVisible(false);
 	    btnStatVisiteur.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-	            new PageTest().setVisible(true);
+	            menu_stats_visiteur stat_visiteur = new menu_stats_visiteur(role);
+	            stat_visiteur.setVisible(true);
+	            dispose();
 	        }
 	    });
 	    getContentPane().add(btnStatVisiteur);
@@ -100,6 +104,9 @@ public class Menu extends JFrame {
 	    btnStatRegion.setVisible(false);
 	    btnStatRegion.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
+	    		menu_stats_region stat_region = new menu_stats_region(role);
+	    		stat_region.setVisible(true);
+	            dispose();
 	    	}
 	    });
 	    btnStatRegion.setBounds(381, 155, 189, 54);

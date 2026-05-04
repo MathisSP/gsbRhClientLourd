@@ -103,7 +103,7 @@ public class FicheFraisDAO extends DAO<FicheFrais> {
 	/**
 	 * Méthode de recherche des informations de toutes les fiche de frais
 	 * 
-	 * @return {@code ArrayList<String>} Une Liste de fiches de frais
+	 * @return Une Liste de fiches de frais
 	 */
 	public static ArrayList<FicheFrais> selectAllFiche() {
 
@@ -129,7 +129,7 @@ public class FicheFraisDAO extends DAO<FicheFrais> {
 	/**
 	 * Récupère toutes les fiches de frais d'un visiteur spécifique.
 	 * @param idUtilisateur l'ID du visiteur
-	 * @return ArrayList<FicheFrais> liste des fiches du visiteur
+	 * @return liste des fiches du visiteur
 	 */
 	public static ArrayList<FicheFrais> selectFicheByIdUtilisateur(String idUtilisateur) {
 	    ArrayList<FicheFrais> fiches = new ArrayList<>();
@@ -166,7 +166,7 @@ public class FicheFraisDAO extends DAO<FicheFrais> {
 	/**
 	 * Récupère les lignes de frais forfaitaires d'une fiche.
 	 * @param idFiche l'identifiant de la fiche
-	 * @return ArrayList<LigneFraisForfait> les lignes forfaitaires de la fiche
+	 * @return les lignes forfaitaires de la fiche
 	 */
 	public static ArrayList<LigneFraisForfait> selectLignesForfaitByIdFiche(int idFiche) {
 	    ArrayList<LigneFraisForfait> lignes = new ArrayList<>();
@@ -175,15 +175,15 @@ public class FicheFraisDAO extends DAO<FicheFrais> {
 	        String sql = "SELECT * FROM lignefraisforfait WHERE idFiche = ?";
 	        PreparedStatement pst = conn.prepareStatement(sql);
 	        pst.setInt(1, idFiche);
-	        ResultSet rs = pst.executeQuery();
-	        while (rs.next()) {
+	        ResultSet result = pst.executeQuery();
+	        while (result.next()) {
 	            lignes.add(new LigneFraisForfait(
-	                rs.getInt("idFiche"),
-	                rs.getString("idFraisForfait"),
-	                rs.getInt("quantite")
+	            	result.getInt("idFiche"),
+	            	result.getString("idFraisForfait"),
+	            	result.getInt("quantite")
 	            ));
 	        }
-	        rs.close();
+	        result.close();
 	        pst.close();
 	    } catch (SQLException e) {
 	        e.printStackTrace();
@@ -194,7 +194,7 @@ public class FicheFraisDAO extends DAO<FicheFrais> {
 	/**
 	 * Récupère les lignes de frais hors forfait d'une fiche.
 	 * @param idFiche l'identifiant de la fiche
-	 * @return ArrayList<LigneFraisHorsForfait> les lignes hors forfait de la fiche
+	 * @return les lignes hors forfait de la fiche
 	 */
 	public static ArrayList<LigneFraisHorsForfait> selectLignesHorsForfaitByIdFiche(int idFiche) {
 	    ArrayList<LigneFraisHorsForfait> lignes = new ArrayList<>();
@@ -203,21 +203,186 @@ public class FicheFraisDAO extends DAO<FicheFrais> {
 	        String sql = "SELECT * FROM lignefraishorsforfait WHERE idFiche = ?";
 	        PreparedStatement pst = conn.prepareStatement(sql);
 	        pst.setInt(1, idFiche);
-	        ResultSet rs = pst.executeQuery();
-	        while (rs.next()) {
+	        ResultSet result = pst.executeQuery();
+	        while (result.next()) {
 	            lignes.add(new LigneFraisHorsForfait(
-	                rs.getInt("idLigneFHF"),
-	                rs.getInt("idFiche"),
-	                rs.getString("libelle"),
-	                rs.getDate("dateFrais"),
-	                rs.getFloat("montant")
+	            	result.getInt("idLigneFHF"),
+	            	result.getInt("idFiche"),
+	            	result.getString("libelle"),
+	            	result.getDate("dateFrais"),
+	            	result.getFloat("montant")
 	            ));
 	        }
-	        rs.close();
+	        result.close();
 	        pst.close();
 	    } catch (SQLException e) {
 	        e.printStackTrace();
 	    }
 	    return lignes;
+	}
+	
+	/**
+	 * Nombre de fiches hors forfait par visiteur pour un mois donné
+	 * @param mois l'identifiant du mois
+	 * @return les lignes ayant l utilisateur , le mois et le nombre total de frais hors forfait de la fiche du mois
+	 */
+	public static ArrayList<Object[]> getNbHorsForfaitParMois(int mois) {
+	    ArrayList<Object[]> resultats = new ArrayList<>();
+	    try {
+	        Connection conn = ConnexionDB.getConnection();
+	        String sql = "SELECT u.idUtilisateur, u.nom, u.prenom, f.mois, COUNT(lhf.idLigneFHF) as nbHorsForfait "
+	                   + "FROM utilisateur u "
+	                   + "JOIN fichefrais f ON u.idUtilisateur = f.idUtilisateur "
+	                   + "JOIN lignefraishorsforfait lhf ON f.idFiche = lhf.idFiche "
+	                   + "WHERE f.mois = ? "
+	                   + "GROUP BY u.idUtilisateur, u.nom, u.prenom, f.mois";
+	        PreparedStatement pst = conn.prepareStatement(sql);
+	        pst.setInt(1, mois);
+	        ResultSet result = pst.executeQuery();
+	        while (result.next()) {
+	            resultats.add(new Object[]{
+	            	result.getString("idUtilisateur"),
+	            	result.getString("nom"),
+	            	result.getString("prenom"),
+	            	result.getInt("mois"),
+	            	result.getInt("nbHorsForfait")
+	            });
+	        }
+	        result.close(); pst.close();
+	    } catch (SQLException e) { e.printStackTrace(); }
+	    return resultats;
+	}
+
+	/**
+	 * Montant total des fiches hors forfait par visiteur pour un mois donné
+	 * @param mois l'identifiant du mois
+	 * @return les lignes ayant l utilisateur , le mois et le montant total hors forfait de la fiche du mois
+	 */
+	public static ArrayList<Object[]> getMontantHorsForfaitParMois(int mois) {
+	    ArrayList<Object[]> resultats = new ArrayList<>();
+	    try {
+	        Connection conn = ConnexionDB.getConnection();
+	        String sql = "SELECT u.idUtilisateur, u.nom, u.prenom, f.mois, SUM(lhf.montant) as montantTotal "
+	                   + "FROM utilisateur u "
+	                   + "JOIN fichefrais f ON u.idUtilisateur = f.idUtilisateur "
+	                   + "JOIN lignefraishorsforfait lhf ON f.idFiche = lhf.idFiche "
+	                   + "WHERE f.mois = ? "
+	                   + "GROUP BY u.idUtilisateur, u.nom, u.prenom, f.mois";
+	        PreparedStatement pst = conn.prepareStatement(sql);
+	        pst.setInt(1, mois);
+	        ResultSet result = pst.executeQuery();
+	        while (result.next()) {
+	            resultats.add(new Object[]{
+	            	result.getString("idUtilisateur"),
+	            	result.getString("nom"),
+	            	result.getString("prenom"),
+	                result.getInt("mois"),
+	                String.format("%.2f €", result.getFloat("montantTotal"))
+	            });
+	        }
+	        result.close(); pst.close();
+	    } catch (SQLException e) { e.printStackTrace(); }
+	    return resultats;
+	}
+
+	/**
+	 * Montant total des frais forfait par visiteur pour un mois donné
+	 * @param mois l'identifiant du mois
+	 * @return les lignes ayant l utilisateur , le mois et le montant total de la fiche du mois	 
+	 */
+	public static ArrayList<Object[]> getMontantForfaitParMois(int mois) {
+	    ArrayList<Object[]> resultats = new ArrayList<>();
+	    try {
+	        Connection conn = ConnexionDB.getConnection();
+	        String sql = "SELECT u.idUtilisateur, u.nom, u.prenom, f.mois, f.montantValide as montantTotal "
+	                   + "FROM utilisateur u "
+	                   + "JOIN fichefrais f ON u.idUtilisateur = f.idUtilisateur "
+	                   + "WHERE f.mois = ?";
+	        PreparedStatement pst = conn.prepareStatement(sql);
+	        pst.setInt(1, mois);
+	        ResultSet result = pst.executeQuery();
+	        while (result.next()) {
+	            resultats.add(new Object[]{
+	            	result.getString("idUtilisateur"),
+	            	result.getString("nom"),
+	            	result.getString("prenom"),
+	            	result.getInt("mois"),
+	                String.format("%.2f €", result.getFloat("montantTotal"))
+	            });
+	        }
+	        result.close(); pst.close();
+	    } catch (SQLException e) { e.printStackTrace(); }
+	    return resultats;
+	}
+	
+	/**
+	 * Calcule la moyenne des montants de frais forfait par région pour un mois donné.
+	 * Inclut le nombre de visiteurs concernés par région.
+	 * @param mois le numéro du mois
+	 * @return une liste de tableaux contenant : idRegion , libelleRegion , mois, nbVisiteurs , moyenne
+	 */
+	public static ArrayList<Object[]> getMoyenneForfaitParRegion(int mois) {
+	    ArrayList<Object[]> resultats = new ArrayList<>();
+	    try {
+	        Connection conn = ConnexionDB.getConnection();
+	        String sql = "SELECT r.idRegion, r.libelleRegion, f.mois, "
+	                   + "COUNT(DISTINCT u.idUtilisateur) as nbVisiteurs, "
+	                   + "AVG(f.montantValide) as moyenne "
+	                   + "FROM region r "
+	                   + "JOIN utilisateur u ON u.idRegion = r.idRegion "
+	                   + "JOIN fichefrais f ON f.idUtilisateur = u.idUtilisateur "
+	                   + "WHERE f.mois = ? "
+	                   + "GROUP BY r.idRegion, r.libelleRegion, f.mois";
+	        PreparedStatement pst = conn.prepareStatement(sql);
+	        pst.setInt(1, mois);
+	        ResultSet rs = pst.executeQuery();
+	        while (rs.next()) {
+	            resultats.add(new Object[]{
+	                rs.getInt("idRegion"),
+	                rs.getString("libelleRegion"),
+	                rs.getInt("mois"),
+	                rs.getInt("nbVisiteurs"),
+	                String.format("%.2f €", rs.getFloat("moyenne"))
+	            });
+	        }
+	        rs.close(); pst.close();
+	    } catch (SQLException e) { e.printStackTrace(); }
+	    return resultats;
+	}
+
+	/**
+	 * Calcule la moyenne des montants de frais hors forfait par région pour un mois donné.
+	 * Inclut le nombre de visiteurs concernés par région.
+	 * @param mois le numéro du mois
+	 * @return une liste de tableaux contenant : idRegion, libelleRegion , mois , nbVisiteurs , moyenne
+	 */
+	public static ArrayList<Object[]> getMoyenneHorsForfaitParRegion(int mois) {
+	    ArrayList<Object[]> resultats = new ArrayList<>();
+	    try {
+	        Connection conn = ConnexionDB.getConnection();
+	        String sql = "SELECT r.idRegion, r.libelleRegion, f.mois, "
+	                   + "COUNT(DISTINCT u.idUtilisateur) as nbVisiteurs, "
+	                   + "AVG(lhf.montant) as moyenne "
+	                   + "FROM region r "
+	                   + "JOIN utilisateur u ON u.idRegion = r.idRegion "
+	                   + "JOIN fichefrais f ON f.idUtilisateur = u.idUtilisateur "
+	                   + "JOIN lignefraishorsforfait lhf ON lhf.idFiche = f.idFiche "
+	                   + "WHERE f.mois = ? "
+	                   + "GROUP BY r.idRegion, r.libelleRegion, f.mois";
+	        PreparedStatement pst = conn.prepareStatement(sql);
+	        pst.setInt(1, mois);
+	        ResultSet rs = pst.executeQuery();
+	        while (rs.next()) {
+	            resultats.add(new Object[]{
+	                rs.getInt("idRegion"),
+	                rs.getString("libelleRegion"),
+	                rs.getInt("mois"),
+	                rs.getInt("nbVisiteurs"),
+	                String.format("%.2f €", rs.getFloat("moyenne"))
+	            });
+	        }
+	        rs.close(); pst.close();
+	    } catch (SQLException e) { e.printStackTrace(); }
+	    return resultats;
 	}
 }

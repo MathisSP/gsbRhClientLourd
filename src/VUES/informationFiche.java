@@ -36,7 +36,6 @@ public class informationFiche extends JFrame {
         this(role, null, 0);
     }
 
-    /** @wbp.parser.constructor */
     public informationFiche(String role, String idVisiteur, int idFiche) {
         this.role = role;
         this.idVisiteur = idVisiteur;

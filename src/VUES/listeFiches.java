@@ -59,7 +59,6 @@ public class listeFiches extends JFrame {
      * Crée la fenêtre de liste des fiches de frais pour un visiteur spécifique.
      * @param role le rôle de l'utilisateur connecté
      * @param idVisiteur l'ID du visiteur dont on veut voir les fiches de frais
-     * @wbp.parser.constructor
      */
     public listeFiches(String role, String idVisiteur) {
         this.role = role;
@@ -109,7 +108,7 @@ public class listeFiches extends JFrame {
             FicheFrais f = getFicheSelectionnee();
             if (f != null) {
                 // TODO : ouvrir la vue détail de la fiche
-                JOptionPane.showMessageDialog(null, "Fiche sélectionnée : " + f.getIdFiche());
+                // JOptionPane.showMessageDialog(null, "Fiche sélectionnée : " + f.getIdFiche()); // affiche un message pour indiquer la fiche selectionner
             }
         });
         contentPane.add(btnViewFiche);
@@ -127,20 +126,15 @@ public class listeFiches extends JFrame {
     /**
      * Retourne la fiche de frais sélectionnée dans le tableau.
      * Affiche un message d'avertissement si aucune ligne n'est sélectionnée.
-     * @return {@code FicheFrais} la fiche sélectionnée, ou null si aucune
+     * @return {@code FicheFrais} la fiche sélectionnée
      */
     private FicheFrais getFicheSelectionnee() {
         int ligneSelectionnee = tableFiches.getSelectedRow();
-        if (ligneSelectionnee == -1) {
-            JOptionPane.showMessageDialog(null, "Veuillez sélectionner une fiche.","Attention", JOptionPane.WARNING_MESSAGE);
-            return null;
-        }
         
         int idSelectionne = Integer.parseInt((String) tableFiches.getValueAt(ligneSelectionnee, 0));
         
         for (FicheFrais f : fichesfrais) {
             if (f.getIdFiche() == idSelectionne) {
-            	// va être utiliser pour afficher la fiche qu'on veut précisément
             	informationFiche ficheChoisit = new informationFiche(role,idVisiteur,f.getIdFiche());
             	ficheChoisit.setVisible(true);
                 dispose();

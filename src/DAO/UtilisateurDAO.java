@@ -254,7 +254,7 @@ public class UtilisateurDAO extends DAO<Utilisateur> {
 	/**
 	* Méthode de recherche des informations de tout les utilisateurs
 	* 
-	* @return {@code ArrayList<Utilisateur>} Une liste de tout les utilisateurs
+	* @return Une liste de tout les utilisateurs
 	*/
 	public static ArrayList<Utilisateur> findAllUtilisateur() {
 	    ArrayList<Utilisateur> liste = new ArrayList<>();

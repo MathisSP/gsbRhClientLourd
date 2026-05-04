@@ -8,8 +8,8 @@ import java.sql.SQLException;
  * Non instanciable, utiliser uniquement les méthodes statiques.
  */
 public class ConnexionDB {
-	private static final String URL      = "jdbc:mysql://mysql-workstation.alwaysdata.net:3306/workstation_gsbfrais2025-ap?useSSL=false";
-	private static final String USER     = "workstation_myroot";
+	private static final String URL      = "jdbc:mysql://mysql-workstation.alwaysdata.net:3306/workstation_gsbfrais2025-ap-mathis?useSSL=false";
+	private static final String USER     = "workstation_mathis";
 	private static final String PASSWORD = "root123*"; // ton mot de passe pour cet utilisateur
     
     private static Connection instance = null;
