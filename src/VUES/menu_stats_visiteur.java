@@ -52,7 +52,7 @@ public class menu_stats_visiteur extends JFrame {
         lblTitre.setBounds(190, 20, 350, 35);
         contentPane.add(lblTitre);
 
-        JButton btnfichehorsforfait = new JButton("<html><center>Le nombre de fiches frais hors forfait par mois et par région pour chaque visiteur</center></html>");
+        JButton btnfichehorsforfait = new JButton("<html><center>Le nombre de fiches frais hors forfait par mois pour chaque visiteur</center></html>");
         btnfichehorsforfait.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 new statistiques_visiteur(role, "nb_hors_forfait").setVisible(true);
@@ -62,7 +62,7 @@ public class menu_stats_visiteur extends JFrame {
         btnfichehorsforfait.setBounds(44, 97, 233, 71);
         contentPane.add(btnfichehorsforfait);
 
-        JButton btnMontanthorsForfait = new JButton("<html><center>Les montants totaux des fiches<br>hors forfait par mois et par region pour chaque visiteur</center></html>");
+        JButton btnMontanthorsForfait = new JButton("<html><center>Les montants totaux des fiches<br>hors forfait par mois pour chaque visiteur</center></html>");
         btnMontanthorsForfait.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 new statistiques_visiteur(role, "montant_hors_forfait").setVisible(true);
@@ -72,7 +72,7 @@ public class menu_stats_visiteur extends JFrame {
         btnMontanthorsForfait.setBounds(336, 97, 233, 71);
         contentPane.add(btnMontanthorsForfait);
 
-        JButton btnMontantTotal = new JButton("<html><center>Les montants totaux des frais forfait par mois et par region pour chaque visiteur</center></html>");
+        JButton btnMontantTotal = new JButton("<html><center>Les montants totaux des frais forfait par mois pour chaque visiteur</center></html>");
         btnMontantTotal.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 new statistiques_visiteur(role, "montant_forfait").setVisible(true);
